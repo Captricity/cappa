@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+import click
+import json
+
+from cappa import CapPA
+
+@click.group()
+def cappa():
+    pass
+
+@click.command()
+@click.option('--requirements', '-r', default=None, type=click.File('rb'))
+@click.argument('packages', nargs=-1)
+def install(requirements, packages):
+    pa = CapPA()
+    if requirements is None:
+        pa.install(packages)
+    else:
+        pa.install(json.loads(requirements.read()))
+cappa.add_command(install)
+
+@click.command()
+def list():
+    click.echo('list')
+cappa.add_command(list)
+
+@click.command()
+def remove():
+    click.echo('remove')
+cappa.add_command(remove)
+
+if __name__ == '__main__':
+    cappa()
