@@ -91,6 +91,7 @@ class CapPA(object):
         # Update cache
         cache = apt.cache.Cache()
         cache.update()
+        cache.open()
 
         # Now install all the packages requested
         for package in packages:
