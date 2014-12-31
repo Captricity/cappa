@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.4
+---
+
+- Added support for ignoring errors
+
 0.3
 ---
 
