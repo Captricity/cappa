@@ -2,6 +2,7 @@
 
 import click
 import json
+import collections
 
 from cappa import CapPA
 
@@ -17,7 +18,7 @@ def install(requirements, packages):
     if requirements is None:
         pa.install(packages)
     else:
-        pa.install(json.loads(requirements.read()))
+        pa.install(json.loads(requirements.read(), object_pairs_hook=collections.OrderedDict))
 cappa.add_command(install)
 
 @click.command()
