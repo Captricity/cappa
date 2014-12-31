@@ -1,0 +1,9 @@
+{
+    "sys": {
+        "postgresql-client": null,
+        "libpq-dev": null
+    },
+    "pip": {
+        "psycopg2": null
+    }
+}
