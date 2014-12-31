@@ -1,4 +1,43 @@
 cappa
 =====
 
-Unified package aggregator for Captricity. Unifies configurations to install requirements for pip, bower, and npm.
+`cappa` acts as a frontend for various package managers so that you can unify all your configurations into one requirements file.
+
+Usage
+-----
+
+Specify a requirements.json file with the list of requirements you would like to install for each package manager. The configuration is parsed as an ordered dictionary, so you can order the installation process by package manager.
+
+Available package managers
+--------------------------
+
+- sys: Use to specify system packages to install. *Only available on Ubuntu*
+- pip: Use to specify python packages to install
+- npmg: Use to specify npm packages to install globally (`npm -g`)
+- npm: Use to specify local npm packages to install
+- bower: Use to specify bower packages to install
+
+Example requirements.json file
+------------------------------
+
+```javascript
+{
+	"sys": {
+		"postgresql-client": null,
+		"libpq-dev": null
+	},
+	"pip": {
+		"psycopg2": null
+	},
+	"npmg": {
+		"bower": "1.3.12",
+		"gulp": null
+	},
+	"npm": {
+		"gulp-if": null
+	},
+	"bower": {
+		"jquery": null
+	}
+}
+```
