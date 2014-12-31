@@ -1,7 +1,7 @@
 from setuptools import setup
 setup(
     name = "cappa",
-    version = "0.1",
+    version = "0.2",
     description = "Package installer for Captricity. Supports pip, bower, and npm.",
     author = "Yoriyasu Yano",
     author_email = "yorinasub17@gmail.com",
