@@ -11,10 +11,13 @@ def cappa():
     pass
 
 @click.command()
-@click.option('--requirements', '-r', default=None, type=click.File('rb'))
+@click.option('--requirements', '-r', default=None, type=click.File('rb'),
+              help='install using requirements json file')
+@click.option('--warn', is_flag=True,
+              help='print errors as warning and continue')
 @click.argument('packages', nargs=-1)
-def install(requirements, packages):
-    pa = CapPA()
+def install(requirements, warn, packages):
+    pa = CapPA(warn)
     if requirements is None:
         pa.install(packages)
     else:

@@ -1,3 +1,6 @@
+from __future__ import print_function
+
+import sys
 import cytoolz
 import operator
 import subprocess
@@ -9,11 +12,15 @@ class MissingExecutable(Exception):
 class UnknownManager(Exception):
     pass
 
+def warn(*objs):
+    print("WARNING: ", *objs, file=sys.stderr)
+
 class CapPA(object):
-    def __init__(self):
+    def __init__(self, warn_mode):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
         self.pip = find_executable('pip')
+        self.warn_mode = warn_mode
 
     def install(self, packages):
         if isinstance(packages, dict):
@@ -35,33 +42,39 @@ class CapPA(object):
             self._install_system_packages(package_dict['sys'])
 
         for key, packages in package_dict.iteritems():
-            if key == 'sys':
-                # system packages are handled separately above
-                continue
-            elif key == 'npmg':
-                options = ['-g']
-                key = 'npm'
-            else:
-                options = []
-
-            if key == 'npm':
-                connector = '@'
-            elif key == 'bower':
-                connector = '#'
-            elif key == 'pip':
-                connector = '=='
-            else:
-                raise UnknownManager('Could not identify base package manager \'{}\''.format(key))
-
-            manager = getattr(self, key)
-            self._assert_manager_exists(key, manager)
-            args = [manager, 'install'] + options
-            for package, version in packages.iteritems():
-                if version is None:
-                    args.append(package)
+            try:
+                if key == 'sys':
+                    # system packages are handled separately above
+                    continue
+                elif key == 'npmg':
+                    options = ['-g']
+                    key = 'npm'
                 else:
-                    args.append(package + connector + version)
-            subprocess.check_call(args)
+                    options = []
+
+                if key == 'npm':
+                    connector = '@'
+                elif key == 'bower':
+                    connector = '#'
+                elif key == 'pip':
+                    connector = '=='
+                else:
+                    raise UnknownManager('Could not identify base package manager \'{}\''.format(key))
+
+                manager = getattr(self, key)
+                self._assert_manager_exists(key, manager)
+                args = [manager, 'install'] + options
+                for package, version in packages.iteritems():
+                    if version is None:
+                        args.append(package)
+                    else:
+                        args.append(package + connector + version)
+                subprocess.check_call(args)
+            except (UnknownManager, MissingExecutable) as e:
+                if self.warn_mode:
+                    warn(e)
+                else:
+                    raise e
 
     def _install_package_list(self, packages):
         split = map(CapPA.extract_manager, packages)
@@ -80,7 +93,12 @@ class CapPA(object):
     def _install_system_packages(self, packages):
         # For now, only ubuntu is supported
         if platform.dist()[0] != 'Ubuntu':
-            raise UnknownManager('System packages only supported on Ubuntu')
+            message = 'System packages only supported on Ubuntu'
+            if self.warn_mode:
+                warn(message)
+                return
+            else:
+                raise UnknownManager(message)
 
         if isinstance(packages, dict):
             # Convert to list, since apt doesn't support installing specific
