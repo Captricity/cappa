@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import os
 import sys
 import cytoolz
 import operator
@@ -16,11 +17,12 @@ def warn(*objs):
     print("WARNING: ", *objs, file=sys.stderr)
 
 class CapPA(object):
-    def __init__(self, warn_mode):
+    def __init__(self, warn_mode, private_https_oauth=False):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
         self.pip = find_executable('pip')
         self.warn_mode = warn_mode
+        self.private_https_oauth = private_https_oauth
 
     def install(self, packages):
         if isinstance(packages, dict):
@@ -45,6 +47,10 @@ class CapPA(object):
             try:
                 if key == 'sys':
                     # system packages are handled separately above
+                    continue
+                elif key == 'Captricity':
+                    self._private_package_dict(packages)
+                    self._install_package_dict(packages)
                     continue
                 elif key == 'npmg':
                     options = ['-g']
@@ -117,6 +123,18 @@ class CapPA(object):
             if not pkg.is_installed:
                 pkg.mark_install()
         cache.commit()
+
+    def _private_package_dict(self, package_dict):
+        # reconstruct package_dict based on private repo handling mode
+        def repo_url(repo):
+            if self.private_https_oauth:
+                # Use https with oauth. Pulls token from env
+                token = os.environ['GITHUB_TOKEN']
+                return 'git+https://{}@github.com/Captricity/{}.git'.format(token, repo)
+            else:
+                return 'git+ssh://git@github.com/Captricity/{}.git'.format(repo)
+        for key in package_dict:
+            package_dict[key] = {repo_url(repo): None for repo in package_dict[key]}
 
     @staticmethod
     def extract_manager(package):

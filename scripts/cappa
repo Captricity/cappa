@@ -15,9 +15,11 @@ def cappa():
               help='install using requirements json file')
 @click.option('--warn', is_flag=True,
               help='print errors as warning and continue')
+@click.option('--private-https-oauth', is_flag=True,
+              help='Use oauth authenticated https for private repositories (requires GITHUB_TOKEN env var)')
 @click.argument('packages', nargs=-1)
-def install(requirements, warn, packages):
-    pa = CapPA(warn)
+def install(requirements, warn, private_https_oauth, packages):
+    pa = CapPA(warn, private_https_oauth)
     if requirements is None:
         pa.install(packages)
     else:
