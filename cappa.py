@@ -49,19 +49,17 @@ class CapPA(object):
 
         for key, packages in package_dict.iteritems():
             try:
+                prefix = []
+                options = []
                 if key == 'Captricity':
                     self._private_package_dict(packages)
                     self._install_package_dict(packages)
                     continue
                 elif key == 'npmg':
-                    prefix = []
-                    options = ['-g']
+                    options.append('-g')
                     key = 'npm'
                 elif key == 'sys':
-                    prefix = ['sudo']
-                else:
-                    prefix = []
-                    options = []
+                    prefix.append('sudo')
 
                 if key == 'npm':
                     connector = '@'
