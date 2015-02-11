@@ -59,6 +59,7 @@ class CapPA(object):
                     options.append('-g')
                     key = 'npm'
                 elif key == 'sys':
+                    options.append('-y')
                     prefix.append('sudo')
 
                 if key == 'npm':
