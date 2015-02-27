@@ -119,9 +119,9 @@ class CapPA(object):
             if self.private_https_oauth:
                 # Use https with oauth. Pulls token from env
                 token = os.environ['GITHUB_TOKEN']
-                return 'git+https://{}@github.com/Captricity/{}.git'.format(token, repo)
+                return 'git+https://{}@github.com/Captricity/{}.git@master'.format(token, repo)
             else:
-                return 'git+ssh://git@github.com/Captricity/{}.git'.format(repo)
+                return 'git+ssh://git@github.com/Captricity/{}.git@master'.format(repo)
         for key in package_dict:
             package_dict[key] = {repo_url(repo): None for repo in package_dict[key]}
 
