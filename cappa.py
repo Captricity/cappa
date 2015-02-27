@@ -61,6 +61,8 @@ class CapPA(object):
                 elif key == 'sys':
                     options.append('-y')
                     prefix.append('sudo')
+                elif key == 'pip':
+                    options.append('-U')
 
                 if key == 'npm':
                     connector = '@'
