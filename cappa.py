@@ -58,14 +58,14 @@ class CapPA(object):
                     self._install_package_dict(packages)
                     continue
                 elif (key == 'npm' and
-                      packages.has_key('name') and
-                      packages.has_key('version')):
+                      'name' in packages and
+                      'version' in packages):
                     # Package list is actually a package.json file, so treat it as such
                     self._npm_package_json_install(packages)
                     continue
                 elif (key == 'bower' and
-                      packages.has_key('name') and
-                      packages.has_key('version')):
+                      'name' in packages and
+                      'version' in packages):
                     # Package list is actually a bower.json file, so treat it as such
                     self._bower_json_install(packages)
                     continue
@@ -165,7 +165,7 @@ class CapPA(object):
     def _chdir_to_target_if_set(self, package_dict):
         cur_dir = os.getcwd()
         try:
-            if package_dict.has_key('target_dir'):
+            if 'target_dir' in package_dict:
                 os.chdir(package_dict['target_dir'])
             yield
         finally:
