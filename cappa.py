@@ -6,7 +6,9 @@ import cytoolz
 import operator
 import subprocess
 import platform
+import json
 from distutils.spawn import find_executable
+from contextlib import contextmanager
 
 class MissingExecutable(Exception):
     pass
@@ -55,6 +57,18 @@ class CapPA(object):
                     self._private_package_dict(packages)
                     self._install_package_dict(packages)
                     continue
+                elif (key == 'npm' and
+                      'name' in packages and
+                      'version' in packages):
+                    # Package list is actually a package.json file, so treat it as such
+                    self._npm_package_json_install(packages)
+                    continue
+                elif (key == 'bower' and
+                      'name' in packages and
+                      'version' in packages):
+                    # Package list is actually a bower.json file, so treat it as such
+                    self._bower_json_install(packages)
+                    continue
                 elif key == 'npmg':
                     options.append('-g')
                     key = 'npm'
@@ -64,6 +78,8 @@ class CapPA(object):
                 elif key == 'pip':
                     options.append('-U')
 
+                range_connector_gte = ">="
+                range_connector_lt = "<"
                 if key == 'npm':
                     connector = '@'
                 elif key == 'bower':
@@ -81,6 +97,8 @@ class CapPA(object):
                 for package, version in packages.iteritems():
                     if version is None or connector is None:
                         args.append(package)
+                    elif isinstance(version, list):
+                        args.append(package + range_connector_gte + version[0] + ',' + range_connector_lt + version[1])
                     else:
                         args.append(package + connector + version)
                 subprocess.check_call(args)
@@ -126,6 +144,32 @@ class CapPA(object):
                 return 'git+ssh://git@github.com/Captricity/{}.git@master'.format(repo)
         for key in package_dict:
             package_dict[key] = {repo_url(repo): None for repo in package_dict[key]}
+
+    def _npm_package_json_install(self, package_dict):
+        self._assert_manager_exists('npm', self.npm)
+        with self._chdir_to_target_if_set(package_dict):
+            with open('package.json', 'w') as f:
+                f.write(json.dumps(package_dict))
+            subprocess.check_call([self.npm, 'install'])
+            os.remove('package.json')
+
+    def _bower_json_install(self, package_dict):
+        self._assert_manager_exists('bower', self.bower)
+        with self._chdir_to_target_if_set(package_dict):
+            with open('bower.json', 'w') as f:
+                f.write(json.dumps(package_dict))
+            subprocess.check_call([self.bower, 'install'])
+            os.remove('bower.json')
+
+    @contextmanager
+    def _chdir_to_target_if_set(self, package_dict):
+        cur_dir = os.getcwd()
+        try:
+            if 'target_dir' in package_dict:
+                os.chdir(package_dict['target_dir'])
+            yield
+        finally:
+            os.chdir(cur_dir)
 
     @staticmethod
     def extract_manager(package):
