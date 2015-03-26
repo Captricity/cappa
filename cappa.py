@@ -71,6 +71,7 @@ class CapPA(object):
                     continue
                 elif key == 'npmg':
                     options.append('-g')
+                    prefix.append('sudo')
                     key = 'npm'
                 elif key == 'sys':
                     options.append('-y')
