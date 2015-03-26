@@ -35,6 +35,10 @@ class CapPA(object):
             self._install_package_list(packages)
 
     def _assert_manager_exists(self, manager_type, manager_obj):
+        manager_obj = getattr(self, manager_type)
+        if manager_obj is None:
+            manager_obj = find_executable(manager_type) # Might have been installed in a previous step
+
         if manager_obj is None:
             if manager_type == 'npm':
                 raise MissingExecutable('npm not found')
@@ -44,6 +48,8 @@ class CapPA(object):
                 raise MissingExecutable('pip not found')
             if manager_type == 'sys':
                 raise MissingExecutable('apt-get not found')
+        else:
+            return manager_obj
 
     def _install_package_dict(self, package_dict):
         if 'sys' in package_dict:
@@ -92,8 +98,7 @@ class CapPA(object):
                 else:
                     raise UnknownManager('Could not identify base package manager \'{}\''.format(key))
 
-                manager = getattr(self, key)
-                self._assert_manager_exists(key, manager)
+                manager = self._assert_manager_exists(key)
                 args = prefix + [manager, 'install'] + options
                 for package, version in packages.iteritems():
                     if version is None or connector is None:
@@ -112,8 +117,7 @@ class CapPA(object):
     def _install_package_list(self, packages):
         split = map(CapPA.extract_manager, packages)
         for key, packages in cytoolz.itertoolz.groupby(operator.itemgetter(0), split).iteritems():
-            manager = getattr(self, key)
-            self._assert_manager_exists(key, manager)
+            manager = self._assert_manager_exists(key)
             options = list(set(sum(map(operator.itemgetter(2), packages), [])))
             packages = map(operator.itemgetter(1), packages)
             if key == 'sys':
@@ -147,7 +151,7 @@ class CapPA(object):
             package_dict[key] = {repo_url(repo): None for repo in package_dict[key]}
 
     def _npm_package_json_install(self, package_dict):
-        self._assert_manager_exists('npm', self.npm)
+        self._assert_manager_exists('npm')
         with self._chdir_to_target_if_set(package_dict):
             with open('package.json', 'w') as f:
                 f.write(json.dumps(package_dict))
@@ -155,7 +159,7 @@ class CapPA(object):
             os.remove('package.json')
 
     def _bower_json_install(self, package_dict):
-        self._assert_manager_exists('bower', self.bower)
+        self._assert_manager_exists('bower')
         with self._chdir_to_target_if_set(package_dict):
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
