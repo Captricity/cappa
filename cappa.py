@@ -34,7 +34,7 @@ class CapPA(object):
         else:
             self._install_package_list(packages)
 
-    def _assert_manager_exists(self, manager_type, manager_obj):
+    def _assert_manager_exists(self, manager_type):
         manager_obj = getattr(self, manager_type)
         if manager_obj is None:
             manager_obj = find_executable(manager_type) # Might have been installed in a previous step
