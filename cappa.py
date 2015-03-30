@@ -19,7 +19,7 @@ def warn(*objs):
     print("WARNING: ", *objs, file=sys.stderr)
 
 class CapPA(object):
-    def __init__(self, warn_mode, private_https_oauth=False):
+    def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
         self.pip = find_executable('pip')
@@ -27,6 +27,7 @@ class CapPA(object):
         self.sys = find_executable('apt-get')
         self.warn_mode = warn_mode
         self.private_https_oauth = private_https_oauth
+        self.use_venv = use_venv
 
     def install(self, packages):
         if isinstance(packages, dict):
@@ -84,6 +85,8 @@ class CapPA(object):
                     prefix.append('sudo')
                 elif key == 'pip':
                     options.append('-U')
+                    if not self.use_venv:
+                        prefix.append('sudo')
 
                 range_connector_gte = ">="
                 range_connector_lt = "<"
