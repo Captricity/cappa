@@ -18,6 +18,9 @@ class UnknownManager(Exception):
 def warn(*objs):
     print("WARNING: ", *objs, file=sys.stderr)
 
+IS_MAC = 'Darwin' in platform.platform(terse=1)
+IS_UBUNTU = platform.dist()[0] == 'Ubuntu'
+
 class CapPA(object):
     def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
         self.npm = find_executable('npm')
@@ -80,7 +83,8 @@ class CapPA(object):
                 options = []
                 if key == 'npmg':
                     options.append('-g')
-                    prefix.append('sudo')
+                    if not IS_MAC:
+                        prefix.append('sudo')
                     key = 'npm'
                 elif key == 'sys':
                     options.append('-y')
@@ -136,7 +140,7 @@ class CapPA(object):
 
     def _update_apt_cache(self):
         # For now, only ubuntu is supported
-        if platform.dist()[0] != 'Ubuntu':
+        if not IS_UBUNTU:
             message = 'System packages only supported on Ubuntu'
             if self.warn_mode:
                 warn(message)
