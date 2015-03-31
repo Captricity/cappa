@@ -18,6 +18,9 @@ class UnknownManager(Exception):
 def warn(*objs):
     print("WARNING: ", *objs, file=sys.stderr)
 
+IS_MAC = 'Darwin' in platform.platform(terse=1)
+IS_UBUNTU = platform.dist()[0] == 'Ubuntu'
+
 class CapPA(object):
     def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
         self.npm = find_executable('npm')
@@ -80,7 +83,8 @@ class CapPA(object):
                 options = []
                 if key == 'npmg':
                     options.append('-g')
-                    prefix.append('sudo')
+                    if not IS_MAC:
+                        prefix.append('sudo')
                     key = 'npm'
                 elif key == 'sys':
                     options.append('-y')
@@ -136,7 +140,7 @@ class CapPA(object):
 
     def _update_apt_cache(self):
         # For now, only ubuntu is supported
-        if platform.dist()[0] != 'Ubuntu':
+        if not IS_UBUNTU:
             message = 'System packages only supported on Ubuntu'
             if self.warn_mode:
                 warn(message)
@@ -185,7 +189,10 @@ class CapPA(object):
         if self.npm:
             tmp_location = subprocess.check_output(['npm', 'config', 'get', 'tmp'])
             tmp_location = tmp_location.strip()
-            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'npm-*')])
+            prefix = []
+            if not IS_MAC:
+                prefix.append('sudo')
+            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'npm-*')])
 
     def _clean_pip_residuals(self):
         """ Check for residual tmp files left by pip """
@@ -194,7 +201,10 @@ class CapPA(object):
                                           os.environ.get('TEMP',
                                                          os.environ.get('TMP', '/tmp')))
             tmp_location = tmp_location.strip()
-            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'pip-*')])
+            prefix = []
+            if not IS_MAC:
+                prefix.append('sudo')
+            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'pip-*')])
 
     @contextmanager
     def _chdir_to_target_if_set(self, package_dict):
