@@ -58,8 +58,6 @@ class CapPA(object):
 
         for key, packages in package_dict.iteritems():
             try:
-                prefix = []
-                options = []
                 if key == 'Captricity':
                     self._private_package_dict(packages)
                     self._install_package_dict(packages)
@@ -70,13 +68,17 @@ class CapPA(object):
                     # Package list is actually a package.json file, so treat it as such
                     self._npm_package_json_install(packages)
                     continue
-                elif (key == 'bower' and
-                      'name' in packages and
-                      'version' in packages):
-                    # Package list is actually a bower.json file, so treat it as such
-                    self._bower_json_install(packages)
-                    continue
-                elif key == 'npmg':
+                elif key == 'bower':
+                    self._setup_bower()
+                    if ('name' in packages and
+                        'version' in packages):
+                        # Package list is actually a bower.json file, so treat it as such
+                        self._bower_json_install(packages)
+                        continue
+
+                prefix = []
+                options = []
+                if key == 'npmg':
                     options.append('-g')
                     prefix.append('sudo')
                     key = 'npm'
@@ -116,6 +118,9 @@ class CapPA(object):
                     warn(e)
                 else:
                     raise e
+            finally:
+                self._clean_npm_residuals()
+                self._clean_pip_residuals()
 
     def _install_package_list(self, packages):
         split = map(CapPA.extract_manager, packages)
@@ -168,6 +173,28 @@ class CapPA(object):
                 f.write(json.dumps(package_dict))
             subprocess.check_call([self.bower, 'install'])
             os.remove('bower.json')
+
+    def _setup_bower(self):
+        bower_config = os.path.expanduser('~/.bowerrc')
+        if not os.path.exists(bower_config):
+            with open(bower_config, 'w') as f:
+                f.write('{"analytics": false}')
+
+    def _clean_npm_residuals(self):
+        """ Check for residual tmp files left by npm """
+        if self.npm:
+            tmp_location = subprocess.check_output(['npm', 'config', 'get', 'tmp'])
+            tmp_location = tmp_location.strip()
+            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'npm-*')])
+
+    def _clean_pip_residuals(self):
+        """ Check for residual tmp files left by pip """
+        if self.pip:
+            tmp_location = os.environ.get('TMPDIR',
+                                          os.environ.get('TEMP',
+                                                         os.environ.get('TMP', '/tmp')))
+            tmp_location = tmp_location.strip()
+            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'pip-*')])
 
     @contextmanager
     def _chdir_to_target_if_set(self, package_dict):
