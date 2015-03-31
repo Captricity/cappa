@@ -116,6 +116,9 @@ class CapPA(object):
                     warn(e)
                 else:
                     raise e
+            finally:
+                self._clean_npm_residuals()
+                self._clean_pip_residuals()
 
     def _install_package_list(self, packages):
         split = map(CapPA.extract_manager, packages)
@@ -168,6 +171,22 @@ class CapPA(object):
                 f.write(json.dumps(package_dict))
             subprocess.check_call([self.bower, 'install'])
             os.remove('bower.json')
+
+    def _clean_npm_residuals(self):
+        """ Check for residual tmp files left by npm """
+        if self.npm:
+            tmp_location = subprocess.check_output(['npm', 'config', 'get', 'tmp'])
+            tmp_location = tmp_location.strip()
+            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'npm-*')])
+
+    def _clean_pip_residuals(self):
+        """ Check for residual tmp files left by pip """
+        if self.pip:
+            tmp_location = os.environ.get('TMPDIR',
+                                          os.environ.get('TEMP',
+                                                         os.environ.get('TMP', '/tmp')))
+            tmp_location = tmp_location.strip()
+            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'pip-*')])
 
     @contextmanager
     def _chdir_to_target_if_set(self, package_dict):
