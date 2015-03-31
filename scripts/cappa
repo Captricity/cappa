@@ -17,9 +17,11 @@ def cappa():
               help='print errors as warning and continue')
 @click.option('--private-https-oauth', is_flag=True,
               help='Use oauth authenticated https for private repositories (requires GITHUB_TOKEN env var)')
+@click.option('--use-venv/--no-venv', default=True,
+              help='Assumes install uses a python virtualenv')
 @click.argument('packages', nargs=-1)
-def install(requirements, warn, private_https_oauth, packages):
-    pa = CapPA(warn, private_https_oauth)
+def install(requirements, warn, private_https_oauth, use_venv, packages):
+    pa = CapPA(warn, private_https_oauth, use_venv)
     if requirements is None:
         pa.install(packages)
     else:
