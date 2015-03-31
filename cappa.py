@@ -189,7 +189,10 @@ class CapPA(object):
         if self.npm:
             tmp_location = subprocess.check_output(['npm', 'config', 'get', 'tmp'])
             tmp_location = tmp_location.strip()
-            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'npm-*')])
+            prefix = []
+            if not IS_MAC:
+                prefix.append('sudo')
+            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'npm-*')])
 
     def _clean_pip_residuals(self):
         """ Check for residual tmp files left by pip """
@@ -198,7 +201,10 @@ class CapPA(object):
                                           os.environ.get('TEMP',
                                                          os.environ.get('TMP', '/tmp')))
             tmp_location = tmp_location.strip()
-            subprocess.check_call(['sudo', 'rm', '-rf', os.path.join(tmp_location, 'pip-*')])
+            prefix = []
+            if not IS_MAC:
+                prefix.append('sudo')
+            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'pip-*')])
 
     @contextmanager
     def _chdir_to_target_if_set(self, package_dict):
