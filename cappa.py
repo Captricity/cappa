@@ -89,10 +89,8 @@ class CapPA(object):
                 elif key == 'sys':
                     options.append('-y')
                     prefix.append('sudo')
-                elif key == 'pip':
-                    options.append('-U')
-                    if not self.use_venv:
-                        prefix.append('sudo')
+                elif key == 'pip' and not self.use_venv:
+                    prefix.append('sudo')
 
                 range_connector_gte = ">="
                 range_connector_lt = "<"
