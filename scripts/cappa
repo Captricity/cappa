@@ -38,5 +38,10 @@ def remove():
     click.echo('remove')
 cappa.add_command(remove)
 
+@click.command()
+def version():
+    click.echo('0.6')
+cappa.add_command(version)
+
 if __name__ == '__main__':
     cappa()

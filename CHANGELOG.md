@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+0.6
+---
+
+- Added support for locking versions in private repos
+- Added command to print out version
+
 0.5
 ---
 
