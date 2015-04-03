@@ -150,13 +150,20 @@ class CapPA(object):
 
     def _private_package_dict(self, package_dict):
         # reconstruct package_dict based on private repo handling mode
-        def repo_url(repo):
+        def repo_url(repo_string):
+            repo_split = repo_string.split('@')
+            if len(repo_split) > 1:
+                repo, version = repo_split
+            else:
+                repo = repo_split[0]
+                version = 'master'
             if self.private_https_oauth:
                 # Use https with oauth. Pulls token from env
                 token = os.environ['GITHUB_TOKEN']
-                return 'git+https://{}@github.com/Captricity/{}.git@master'.format(token, repo)
+                return 'git+https://{}@github.com/Captricity/{}.git@{}'.format(token, repo, version)
             else:
-                return 'git+ssh://git@github.com/Captricity/{}.git@master'.format(repo)
+                return 'git+ssh://git@github.com/Captricity/{}.git@{}'.format(repo, version)
+
         for key in package_dict:
             package_dict[key] = {repo_url(repo): None for repo in package_dict[key]}
 
