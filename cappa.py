@@ -7,6 +7,7 @@ import operator
 import subprocess
 import platform
 import json
+import collections
 from distutils.spawn import find_executable
 from contextlib import contextmanager
 
@@ -32,7 +33,10 @@ class CapPA(object):
         self.private_https_oauth = private_https_oauth
         self.use_venv = use_venv
 
-    def install(self, packages):
+    def install(self, packages, ignore_managers=None):
+        if ignore_managers:
+            packages = self._filter_packages(packages, ignore_managers)
+
         if isinstance(packages, dict):
             self._install_package_dict(packages)
         else:
@@ -232,3 +236,21 @@ class CapPA(object):
         if split[0] == 'npmg':
             return 'npm', package, ['-g']
         return split[0], package, []
+
+    def _filter_packages(self, packages, ignore_managers):
+        if isinstance(packages, dict):
+            new_packages = collections.OrderedDict()
+            for k in packages:
+                if k not in ignore_managers:
+                    new_packages[k] = packages[k]
+            return new_packages
+        else:
+            new_packages = []
+            for package in packages:
+                add_to_list = True
+                for manager in ignore_managers:
+                    if package.startswith(manager):
+                        add_to_list = False
+                if add_to_list:
+                    new_packages.append(package)
+            return new_packages

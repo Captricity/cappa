@@ -19,13 +19,16 @@ def cappa():
               help='Use oauth authenticated https for private repositories (requires GITHUB_TOKEN env var)')
 @click.option('--use-venv/--no-venv', default=True,
               help='Assumes install uses a python virtualenv')
+@click.option('--ignore-managers', default='',
+              help='Comma separated list of managers to ignore')
 @click.argument('packages', nargs=-1)
-def install(requirements, warn, private_https_oauth, use_venv, packages):
+def install(requirements, warn, private_https_oauth, use_venv, ignore_managers, packages):
     pa = CapPA(warn, private_https_oauth, use_venv)
+    ignore_managers = ignore_managers.split(',')
     if requirements is None:
-        pa.install(packages)
+        pa.install(packages, ignore_managers=ignore_managers)
     else:
-        pa.install(json.loads(requirements.read(), object_pairs_hook=collections.OrderedDict))
+        pa.install(json.loads(requirements.read(), object_pairs_hook=collections.OrderedDict), ignore_managers=ignore_managers)
 cappa.add_command(install)
 
 @click.command()
