@@ -21,10 +21,21 @@ def cappa():
               help='Assumes install uses a python virtualenv')
 @click.option('--ignore-managers', default='',
               help='Comma separated list of managers to ignore')
+@click.option('--install-only', default='',
+              help='Comma separated list of managers to install')
 @click.argument('packages', nargs=-1)
-def install(requirements, warn, private_https_oauth, use_venv, ignore_managers, packages):
+def install(requirements, warn, private_https_oauth, use_venv, ignore_managers, install_only, packages):
     pa = CapPA(warn, private_https_oauth, use_venv)
+    if ignore_managers and install_only:
+        raise click.ClickException('Only one of ignore-managers and install-only can be set')
+
     ignore_managers = ignore_managers.split(',')
+    if install_only:
+        install_only = install_only.split(',')
+        ignore_managers = filter(lambda manager: manager not in install_only, CapPA.ALL_MANAGERS)
+    else:
+        ignore_managers = ignore_managers.split(',')
+
     if requirements is None:
         pa.install(packages, ignore_managers=ignore_managers)
     else:

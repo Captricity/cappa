@@ -5,6 +5,7 @@ Change Log
 ---
 
 - Added support for ignoring particular package managers
+- Added support for installing only particular package managers
 
 0.6
 ---

@@ -23,6 +23,8 @@ IS_MAC = 'Darwin' in platform.platform(terse=1)
 IS_UBUNTU = platform.dist()[0] == 'Ubuntu'
 
 class CapPA(object):
+    ALL_MANAGERS = ['npm', 'npmg', 'bower', 'pip', 'sys', 'Captricity']
+
     def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
