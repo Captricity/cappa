@@ -11,10 +11,17 @@ import collections
 from distutils.spawn import find_executable
 from contextlib import contextmanager
 
+
+__all__ = ('CapPA',)
+
+
 class MissingExecutable(Exception):
     pass
+
+
 class UnknownManager(Exception):
     pass
+
 
 def warn(*objs):
     print("WARNING: ", *objs, file=sys.stderr)
@@ -22,12 +29,14 @@ def warn(*objs):
 IS_MAC = 'Darwin' in platform.platform(terse=1)
 IS_UBUNTU = platform.dist()[0] == 'Ubuntu'
 
+
 class CapPA(object):
-    ALL_MANAGERS = ['npm', 'npmg', 'bower', 'pip', 'sys', 'Captricity']
+    ALL_MANAGERS = ('npm', 'npmg', 'bower', 'tsd', 'pip', 'sys', 'Captricity')
 
     def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
+        self.tsd = find_executable('tsd')
         self.pip = find_executable('pip')
         # TODO: support for osx
         self.sys = find_executable('apt-get')
@@ -47,16 +56,18 @@ class CapPA(object):
     def _assert_manager_exists(self, manager_type):
         manager_obj = getattr(self, manager_type)
         if manager_obj is None:
-            manager_obj = find_executable(manager_type) # Might have been installed in a previous step
+            manager_obj = find_executable(manager_type)  # Might have been installed in a previous step
 
         if manager_obj is None:
             if manager_type == 'npm':
                 raise MissingExecutable('npm not found')
-            if manager_type == 'bower':
+            elif manager_type == 'bower':
                 raise MissingExecutable('bower not found')
-            if manager_type == 'pip':
+            elif manager_type == 'tsd':
+                raise MissingExecutable('tsd not found')
+            elif manager_type == 'pip':
                 raise MissingExecutable('pip not found')
-            if manager_type == 'sys':
+            elif manager_type == 'sys':
                 raise MissingExecutable('apt-get not found')
         else:
             return manager_obj
@@ -79,10 +90,14 @@ class CapPA(object):
                     continue
                 elif key == 'bower':
                     self._setup_bower()
-                    if ('name' in packages and
-                        'version' in packages):
+                    if ('name' in packages and 'version' in packages):
                         # Package list is actually a bower.json file, so treat it as such
                         self._bower_json_install(packages)
+                        continue
+                elif key == 'tsd':
+                    if 'repo' in packages and 'path' in packages:
+                        # Package list is actually a tsd.json file, so treat it as such
+                        self._tsd_json_install(packages)
                         continue
 
                 prefix = []
@@ -107,9 +122,9 @@ class CapPA(object):
                 elif key == 'pip':
                     connector = '=='
                 elif key == 'sys':
-                    connector = None # does not support versioning
+                    connector = None  # does not support versioning
                 else:
-                    raise UnknownManager('Could not identify base package manager \'{}\''.format(key))
+                    raise UnknownManager("Could not identify base package manager '{}'".format(key))
 
                 manager = self._assert_manager_exists(key)
                 args = prefix + [manager, 'install'] + options
@@ -195,6 +210,14 @@ class CapPA(object):
             with open(bower_config, 'w') as f:
                 f.write('{"analytics": false}')
 
+    def _tsd_json_install(self, package_dict):
+        self._assert_manager_exists('tsd')
+        with self._chdir_to_target_if_set(package_dict):
+            with open('tsd.json', 'w') as f:
+                f.write(json.dumps(package_dict))
+            subprocess.check_call([self.tsd, 'reinstall'])
+            os.remove('tsd.json')
+
     def _clean_npm_residuals(self):
         """ Check for residual tmp files left by npm """
         if self.npm:
@@ -231,7 +254,7 @@ class CapPA(object):
     def extract_manager(package):
         if not (package.startswith('pip') or package.startswith('bower') or
                 package.startswith('npm')):
-            raise UnknownManager('Could not identify base package manager for \'{}\''.format(package))
+            raise UnknownManager("Could not identify base package manager for '{}'".format(package))
 
         split = package.split('-')
         package = '-'.join(split[1:])

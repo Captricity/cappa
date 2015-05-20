@@ -6,9 +6,11 @@ import collections
 
 from cappa import CapPA
 
+
 @click.group()
 def cappa():
     pass
+
 
 @click.command()
 @click.option('--requirements', '-r', default=None, type=click.File('rb'),
@@ -41,15 +43,18 @@ def install(requirements, warn, private_https_oauth, use_venv, ignore, only, pac
         pa.install(json.loads(requirements.read(), object_pairs_hook=collections.OrderedDict), ignore_managers=ignore)
 cappa.add_command(install)
 
+
 @click.command()
 def list():
     click.echo('list')
 cappa.add_command(list)
 
+
 @click.command()
 def remove():
     click.echo('remove')
 cappa.add_command(remove)
+
 
 @click.command()
 def version():
