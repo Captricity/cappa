@@ -3,6 +3,11 @@ cappa
 
 `cappa` acts as a frontend for various package managers so that you can unify all your configurations into one requirements file.
 
+Installation
+------------
+
+`pip install git+https://github.com/Captricity/cappa.git`
+
 Usage
 -----
 
