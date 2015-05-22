@@ -16,10 +16,12 @@ __all__ = ('CapPA',)
 
 
 class MissingExecutable(Exception):
+    """Exception raised when a package manager executable is missing"""
     pass
 
 
 class UnknownManager(Exception):
+    """Exception raised when a requested package manager is unknown"""
     pass
 
 
@@ -189,19 +191,19 @@ class CapPA(object):
             package_dict[key] = {repo_url(repo): None for repo in package_dict[key]}
 
     def _npm_package_json_install(self, package_dict):
-        self._assert_manager_exists('npm')
+        npm = self._assert_manager_exists('npm')
         with self._chdir_to_target_if_set(package_dict):
             with open('package.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([self.npm, 'install'])
+            subprocess.check_call([npm, 'install'])
             os.remove('package.json')
 
     def _bower_json_install(self, package_dict):
-        self._assert_manager_exists('bower')
+        bower = self._assert_manager_exists('bower')
         with self._chdir_to_target_if_set(package_dict):
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([self.bower, 'install'])
+            subprocess.check_call([bower, 'install'])
             os.remove('bower.json')
 
     def _setup_bower(self):
@@ -211,11 +213,11 @@ class CapPA(object):
                 f.write('{"analytics": false}')
 
     def _tsd_json_install(self, package_dict):
-        self._assert_manager_exists('tsd')
+        tsd = self._assert_manager_exists('tsd')
         with self._chdir_to_target_if_set(package_dict):
             with open('tsd.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([self.tsd, 'reinstall'])
+            subprocess.check_call([tsd, 'reinstall'])
             os.remove('tsd.json')
 
     def _clean_npm_residuals(self):
