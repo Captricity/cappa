@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.8.X
+-----
+
+- Bug fix: Fix bug where cappa does not recheck for executables if previous step installs the package manager
+
 0.8
 ---
 
