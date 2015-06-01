@@ -1,15 +1,30 @@
 from __future__ import absolute_import
 
-import subprocess
-from fabric.api import env, execute, task, run, sudo, cd
 from .base import VagrantTestCase
 
 class SystemTestCases(VagrantTestCase):
 
     def test_basic(self):
-        p = subprocess.Popen(['rake', 'spec'], cwd='tests/serverspecs/system_basic_spec', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = p.communicate()
-        print stdout
-        print stderr
-        if p.returncode:
-            raise Exception(stdout)
+        self.run_spec('system_basic_spec')
+
+    def test_install_single(self):
+        self.install_requirements_json(TEST_INSTALL_SINGLE_REQ_JSON)
+        self.run_spec('system_install_single_spec')
+        
+    def test_install_multiple(self):
+        self.install_requirements_json(TEST_INSTALL_MULTIPLE_REQ_JSON)
+        self.run_spec('system_install_multiple_spec')
+        
+
+TEST_INSTALL_SINGLE_REQ_JSON = """{
+    "sys": {
+        "postgresql-client": null
+    }
+}"""
+
+TEST_INSTALL_MULTIPLE_REQ_JSON = """{
+    "sys": {
+        "postgresql-client": null,
+        "libpq-dev": null
+    }
+}"""

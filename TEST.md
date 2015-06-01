@@ -1,0 +1,6 @@
+- Testing uses Vagrant with serverspec
+- To run tests:
+    - Install vagrant
+    - Install virtualbox
+    - Install ruby and serverspec gem
+    - Install python requirements in test_requirements.txt
