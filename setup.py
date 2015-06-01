@@ -9,5 +9,7 @@ setup(
 
     py_modules = ["cappa"],
     scripts = ["scripts/cappa"],
-    install_requires = open("requirements.txt").read().split()
+    install_requires = open("requirements.txt").read().split(),
+    tests_requires = open("test_requirements.txt").read().split(),
+    test_suite='tests'
 )
