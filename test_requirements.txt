@@ -1,0 +1,2 @@
+fabric==1.10.1
+python-vagrant==0.5.8

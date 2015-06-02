@@ -5,6 +5,7 @@ Change Log
 -----
 
 - Bug fix: Fix bug where cappa does not recheck for executables if previous step installs the package manager
+- Unit tests
 
 0.8
 ---

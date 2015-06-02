@@ -2,12 +2,14 @@ from setuptools import setup
 
 setup(
     name = "cappa",
-    version = "0.8.1",
+    version = "0.8.2",
     description = "Package installer for Captricity. Supports apt-get, pip, bower, and npm.",
     author = "Yoriyasu Yano",
     author_email = "yorinasub17@gmail.com",
 
     py_modules = ["cappa"],
     scripts = ["scripts/cappa"],
-    install_requires = open("requirements.txt").read().split()
+    install_requires = open("requirements.txt").read().split(),
+    tests_requires = open("test_requirements.txt").read().split(),
+    test_suite='tests'
 )
