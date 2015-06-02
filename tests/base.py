@@ -6,8 +6,7 @@ from fabric.api import env, execute, task, sudo, put, run, cd
 
 @task
 def setup_cappa():
-    """Installs cappa on the vagrant box
-    """
+    """Installs cappa on the vagrant box."""
     with cd('/vagrant'):
         sudo('python setup.py install')
 
@@ -42,8 +41,7 @@ class VagrantTestCase(unittest.TestCase):
         self.vagrant.destroy()
 
     def _setup_vagrant(self):
-        """Ensure a vagrant machine exists
-        """
+        """Ensure a vagrant machine exists."""
         self.vagrant = vagrant.Vagrant()
         box_status = self.vagrant.status()[0]
         if box_status.state == vagrant.Vagrant.RUNNING:
@@ -52,8 +50,7 @@ class VagrantTestCase(unittest.TestCase):
         self.vagrant.up()
 
     def _setup_cappa(self):
-        """Ensure cappa is installed
-        """
+        """Ensure cappa is installed."""
         self.run_fabric_task(setup_cappa)
 
     def install_requirements_json(self, requirements_json):
@@ -75,8 +72,7 @@ class VagrantTestCase(unittest.TestCase):
             raise Exception(stdout)
 
     def run_fabric_task(self, fabric_task):
-        """Execute a fabric task against the provisioned vagrant box
-        """
+        """Execute a fabric task against the provisioned vagrant box."""
         env.hosts = [self.vagrant.user_hostname_port()]
         env.key_filename = self.vagrant.keyfile()
         env.disable_known_hosts
