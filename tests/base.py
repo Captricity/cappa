@@ -4,23 +4,28 @@ import subprocess
 from cStringIO import StringIO
 from fabric.api import env, execute, task, sudo, put, run, cd
 
+
 @task
 def setup_cappa():
     """Installs cappa on the vagrant box."""
     with cd('/vagrant'):
         sudo('python setup.py install')
 
+
 def requirements_json_install_factory(requirements_json):
     """Given the contents of the requirements.json file, this will return a
     fabric task that will create the file on the remote machine and install the
     requirements using cappa.
     """
+
     @task
     def requirements_json_install():
         with cd('/home/vagrant'):
             put(StringIO(requirements_json), '/home/vagrant/requirements.json')
             run('cappa install -r /home/vagrant/requirements.json')
+
     return requirements_json_install
+
 
 class VagrantTestCase(unittest.TestCase):
     """Baseclass for Vagrant test cases
@@ -62,9 +67,12 @@ class VagrantTestCase(unittest.TestCase):
     def run_spec(self, spec_name):
         """Meat of the framework. Will run the specified serverspec file.
 
-        The serverspec must exist in `tests/serverspecs`.
+        The serverspec test must exist in `tests/serverspecs/spec/default`.
         """
-        p = subprocess.Popen(['rake', 'spec'], cwd='tests/serverspecs/' + spec_name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(['rake', 'spec', 'SPEC=spec/default/{}.rb'.format(spec_name)],
+                             cwd='tests/serverspecs',
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
         print stdout
         print stderr
