@@ -22,7 +22,7 @@ def requirements_json_install_factory(requirements_json):
     def requirements_json_install():
         with cd('/home/vagrant'):
             put(StringIO(requirements_json), '/home/vagrant/requirements.json')
-            run('cappa install -r /home/vagrant/requirements.json')
+            run('cappa install --no-venv -r /home/vagrant/requirements.json')
 
     return requirements_json_install
 
