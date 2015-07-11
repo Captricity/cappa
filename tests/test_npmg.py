@@ -12,8 +12,7 @@ class NpmgTestCases(VagrantTestCase):
 
 TEST_INSTALL_NPMG_VERSION_JSON = """{
     "npmg": {
-        "bower": "1.4.1"
-        "gulp": "3.8.7"
+        "jshint": "2.8.0"
     }
 }"""
 

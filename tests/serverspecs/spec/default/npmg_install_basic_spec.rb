@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-describe command('npmg show bower') do
-  its(:stdout) { should contain('Version: 1.4.1') }
-end
-
-describe command('npmg show gulp') do
-  its(:stdout) { should contain('Version: 3.8.7') }
+describe command('npm show jshint') do
+  its(:stdout) { should contain("version: '2.8.0'") }
 end

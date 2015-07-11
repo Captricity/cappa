@@ -12,12 +12,16 @@ class CaptricityTestCases(VagrantTestCase):
 
 TEST_INSTALL_CAPTRICITY_VERSION_JSON = """{
     "Captricity": {
-        "pip": ["captsule@0.17", "cog@production", "internal-api-clients@v0.0.3"]
+        "pip": null
     }
 }"""
 
+
+#pip and git
+
 TEST_NECESSARY_PROVISIONERS = """{
     "sys": {
-        "Captricity": null
+        "python-pip": null,
+        "git": null
     }
 }"""
