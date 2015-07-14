@@ -1,15 +1,19 @@
 from __future__ import absolute_import
-from .base import VagrantTestCase
+from cStringIO import StringIO
 
 from fabric.api import task, put, run, cd
+
 from fabric.context_managers import settings
-from cStringIO import StringIO
+
+from .base import VagrantTestCase
+from tests.dependencies import VIRTUALENV_DEPENDENCIES, PYTHON_DEPENDENCIES
 
 
 class CaptricityTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(TEST_NECESSARY_PROVISIONERS)
+        self.install_requirements_json(PYTHON_DEPENDENCIES)
+        self.install_requirements_json(VIRTUALENV_DEPENDENCIES)
         self.run_fabric_task(self.install_requirements_json_captricity_factory(TEST_INSTALL_CAPTRICITY_VERSION_JSON))
         self.run_spec('captricity_install_basic_spec')
 
@@ -29,15 +33,5 @@ class CaptricityTestCases(VagrantTestCase):
 TEST_INSTALL_CAPTRICITY_VERSION_JSON = """{
     "Captricity": {
         "pip": ["internal-api-clients@v0.0.3"]
-    }
-}"""
-
-TEST_NECESSARY_PROVISIONERS = """{
-    "sys": {
-        "python-pip": null,
-        "git": null
-    },
-    "pip": {
-        "virtualenv": null
     }
 }"""
