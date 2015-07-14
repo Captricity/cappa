@@ -9,11 +9,11 @@ class TsdTestCases(VagrantTestCase):
     def test_basic(self):
         self.install_requirements_json(NPM_DEPENDENCIES)
         self.install_requirements_json(TSD_DEPENDENCIES)
-        self.install_requirements_json(TEST_TSD_VERSION_JASON)
+        self.install_requirements_json(TEST_TSD_VERSION_JSON)
         self.run_spec('tsd_install_basic_spec')
 
 
-TEST_TSD_VERSION_JASON = """{
+TEST_TSD_VERSION_JSON = """{
     "tsd": {
         "version": "v4",
         "repo": "borisyankov/DefinitelyTyped",

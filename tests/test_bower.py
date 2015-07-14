@@ -18,16 +18,7 @@ TEST_INSTALL_BOWER_VERSION_JSON = """{
         "version": "0.1.1",
         "description": "Captricity, Inc.",
         "dependencies": {
-            "jquery": "2.1.4",
-            "lodash": "3.9.3",
-            "angular": "1.4.0",
-            "angular-animate": "1.4.0",
-            "angular-sanitize": "1.4.0",
-            "angular-cookies": "1.4.0",
-            "angular-strap": "2.2.4",
-            "angular-mocks": "1.4.0",
-            "bootstrap": "3.3.5",
-            "bootstrap-sass-official": "3.3.5"
+            "jquery": "2.1.4"
         },
         "private": true,
         "ignore": [
