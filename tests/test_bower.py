@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 
 from .base import VagrantTestCase
-from cStringIO import StringIO
-from fabric.api import task, put, cd
 
 class CaptricityTestCases(VagrantTestCase):
 

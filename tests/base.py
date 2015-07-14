@@ -43,8 +43,7 @@ class VagrantTestCase(unittest.TestCase):
         self._setup_cappa()
 
     def tearDown(self):
-        # self.vagrant.destroy()
-        pass
+        self.vagrant.destroy()
 
     def _setup_vagrant(self):
         """Ensure a vagrant machine exists."""

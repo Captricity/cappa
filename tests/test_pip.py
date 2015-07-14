@@ -7,7 +7,7 @@ class PipTestCases(VagrantTestCase):
     def test_basic(self):
         self.install_requirements_json(TEST_NECESSARY_PROVISIONERS)
         self.install_requirements_json(TEST_INSTALL_PIP_VERSION_JSON)
-        self.run_spec('pip_install_basic')
+        self.run_spec('pip_install_basic_spec')
 
 
 TEST_INSTALL_PIP_VERSION_JSON = """{
