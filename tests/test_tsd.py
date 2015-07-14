@@ -1,31 +1,21 @@
 from __future__ import absolute_import
 
 from .base import VagrantTestCase
+from tests import assets
 
 class TsdTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(TEST_NECESSARY_PROVISIONERS)
-        self.install_requirements_json(TEST_INSTALL_TSD_VERSION_JSON)
-        self.install_requirements_json(TEST_TSD_VERSION_JASON)
+        self.install_requirements_json(assets.TEST_NECESSARY_PIP_VIRTUALENV)
+        self.install_requirements_json_virtualenv(assets.TEST_NECESSARY_NPM_GIT_NODE)
+        self.install_requirements_json_virtualenv(TEST_TSD_VERSION_JASON)
         self.run_spec('tsd_install_basic_spec')
 
 
-TEST_INSTALL_TSD_VERSION_JSON = """{
+TEST_TSD_VERSION_JASON = """{
     "npmg": {
         "tsd": "0.6.0"
-    }
-}"""
-
-
-TEST_NECESSARY_PROVISIONERS = """{
-    "sys": {
-        "npm": null,
-        "nodejs-legacy": null
-    }
-}"""
-
-TEST_TSD_VERSION_JASON = """{
+    },
     "tsd": {
         "version": "v4",
         "repo": "borisyankov/DefinitelyTyped",

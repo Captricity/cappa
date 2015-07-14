@@ -1,18 +1,22 @@
 from __future__ import absolute_import
 
 from .base import VagrantTestCase
+from tests import assets
 
 class CaptricityTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(TEST_NECESSARY_PROVISIONERS)
-        self.install_requirements_json(TEST_NECESSARY_BOWER)
-        self.install_requirements_json(TEST_INSTALL_BOWER_VERSION_JSON)
+        self.install_requirements_json(assets.TEST_NECESSARY_PIP_VIRTUALENV)
+        self.install_requirements_json_virtualenv(assets.TEST_NECESSARY_NPM_GIT_NODE)
+        self.install_requirements_json_virtualenv(TEST_INSTALL_BOWER_VERSION_JSON)
         self.run_spec('bower_install_basic_spec')
 
 
 
 TEST_INSTALL_BOWER_VERSION_JSON = """{
+    "npmg": {
+        "bower": null
+    },
     "bower": {
         "name": "captricity",
         "version": "0.1.1",
@@ -40,16 +44,3 @@ TEST_INSTALL_BOWER_VERSION_JSON = """{
     }
 }"""
 
-TEST_NECESSARY_PROVISIONERS = """{
-    "sys": {
-        "npm": null,
-        "git": null,
-        "nodejs-legacy": null
-    }
-}"""
-
-TEST_NECESSARY_BOWER = """{
-    "npmg": {
-        "bower": null
-    }
-}"""

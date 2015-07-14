@@ -10,7 +10,6 @@ class CaptricityTestCases(VagrantTestCase):
 
     def test_basic(self):
         self.install_requirements_json(TEST_NECESSARY_PROVISIONERS)
-        self.install_requirements_json(TEST_NECESSARY_PIP_VIRTUALENV)
         self.run_fabric_task(self.install_requirements_json_captricity_factory(TEST_INSTALL_CAPTRICITY_VERSION_JSON))
         self.run_spec('captricity_install_basic_spec')
 
@@ -37,10 +36,7 @@ TEST_NECESSARY_PROVISIONERS = """{
     "sys": {
         "python-pip": null,
         "git": null
-    }
-}"""
-
-TEST_NECESSARY_PIP_VIRTUALENV = """{
+    },
     "pip": {
         "virtualenv": null
     }

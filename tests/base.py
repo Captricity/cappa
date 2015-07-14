@@ -26,6 +26,21 @@ def requirements_json_install_factory(requirements_json):
 
     return requirements_json_install
 
+def requirements_json_install_factory_virtualenv(requirements_json):
+    """Given the contents of the requirements.json file, this will return a
+    fabric task that will create the file on the remote machine and install the
+    requirements using cappa.
+    """
+
+    @task
+    def requirements_json_install_virtualenv():
+        with cd('/home/vagrant'):
+            put(StringIO(requirements_json), '/home/vagrant/requirements.json')
+            run('virtualenv venv')
+            run('source venv/bin/activate; cappa install -r /home/vagrant/requirements.json')
+
+    return requirements_json_install_virtualenv
+
 
 class VagrantTestCase(unittest.TestCase):
     """Baseclass for Vagrant test cases
@@ -63,6 +78,11 @@ class VagrantTestCase(unittest.TestCase):
         box and install it.
         """
         self.run_fabric_task(requirements_json_install_factory(requirements_json))
+
+    def install_requirements_json_virtualenv(self, requirements_json):
+        """Same as the funciton above, except run in virtual env
+        """
+        self.run_fabric_task(requirements_json_install_factory_virtualenv(requirements_json))
 
     def run_spec(self, spec_name):
         """Meat of the framework. Will run the specified serverspec file.
