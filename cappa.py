@@ -63,20 +63,12 @@ class CapPA(object):
             manager_obj = find_executable(manager_type)  # Might have been installed in a previous step
 
         if manager_obj is None:
-            if manager_type == 'npm':
-                raise MissingExecutable('npm not found')
-            elif manager_type == 'bower':
-                raise MissingExecutable('bower not found')
-            elif manager_type == 'tsd':
-                raise MissingExecutable('tsd not found')
-            elif manager_type == 'pip':
-                raise MissingExecutable('pip not found')
-            elif manager_type == 'pip3':
-                raise MissingExecutable('pip3 not found')
-            elif manager_type == 'pip_pypy':
+            if manager_type == 'pip_pypy':
                 raise MissingExecutable('pip not found')
             elif manager_type == 'sys':
                 raise MissingExecutable('apt-get not found')
+            else:
+                raise MissingExecutable('{} not found'.format(manager_type))
         else:
             if manager_type == 'pip_pypy':
                 pypy_object = find_executable('pypy')
