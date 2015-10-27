@@ -5,6 +5,7 @@ Change Log
 -----
 
 - Bug fix: Fix bug where cappa does not recheck for executables if previous step installs the package manager
+- Add support for python3 and pypy
 - Unit tests
 
 0.8
