@@ -33,13 +33,15 @@ IS_UBUNTU = platform.dist()[0] == 'Ubuntu'
 
 
 class CapPA(object):
-    ALL_MANAGERS = ('npm', 'npmg', 'bower', 'tsd', 'pip', 'sys', 'Captricity')
+    ALL_MANAGERS = ('npm', 'npmg', 'bower', 'tsd', 'pip', 'pip3', 'pip_pypy', 'sys', 'Captricity')
 
     def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
         self.tsd = find_executable('tsd')
         self.pip = find_executable('pip')
+        self.pip3 = find_executable('pip3')
+        self.pip_pypy = find_executable('pip')
         # TODO: support for osx
         self.sys = find_executable('apt-get')
         self.warn_mode = warn_mode
@@ -61,17 +63,18 @@ class CapPA(object):
             manager_obj = find_executable(manager_type)  # Might have been installed in a previous step
 
         if manager_obj is None:
-            if manager_type == 'npm':
-                raise MissingExecutable('npm not found')
-            elif manager_type == 'bower':
-                raise MissingExecutable('bower not found')
-            elif manager_type == 'tsd':
-                raise MissingExecutable('tsd not found')
-            elif manager_type == 'pip':
+            if manager_type == 'pip_pypy':
                 raise MissingExecutable('pip not found')
             elif manager_type == 'sys':
                 raise MissingExecutable('apt-get not found')
+            else:
+                raise MissingExecutable('{} not found'.format(manager_type))
         else:
+            if manager_type == 'pip_pypy':
+                pypy_object = find_executable('pypy')
+                if pypy_object is None:
+                    raise MissingExecutable('pypy not found')
+                return 'pip'
             return manager_obj
 
     def _install_package_dict(self, package_dict):
@@ -112,8 +115,11 @@ class CapPA(object):
                 elif key == 'sys':
                     options.append('-y')
                     prefix.append('sudo')
-                elif key == 'pip' and not self.use_venv:
+                elif key in ['pip', 'pip3', 'pip_pypy'] and not self.use_venv:
                     prefix.append('sudo')
+                if key == 'pip_pypy':
+                    prefix.append('pypy')
+                    prefix.append('-m')
 
                 range_connector_gte = ">="
                 range_connector_lt = "<"
@@ -121,7 +127,7 @@ class CapPA(object):
                     connector = '@'
                 elif key == 'bower':
                     connector = '#'
-                elif key == 'pip':
+                elif key in ['pip', 'pip3', 'pip_pypy']:
                     connector = '=='
                 elif key == 'sys':
                     connector = None  # does not support versioning
@@ -232,7 +238,7 @@ class CapPA(object):
 
     def _clean_pip_residuals(self):
         """ Check for residual tmp files left by pip """
-        if self.pip:
+        if self.pip or self.pip3 or self.pip_pypy:
             tmp_location = os.environ.get('TMPDIR',
                                           os.environ.get('TEMP',
                                                          os.environ.get('TMP', '/tmp')))
@@ -254,7 +260,10 @@ class CapPA(object):
 
     @staticmethod
     def extract_manager(package):
-        if not (package.startswith('pip') or package.startswith('bower') or
+        if not (package.startswith('pip_pypy') or
+                package.startswith('pip3') or
+                package.startswith('pip') or
+                package.startswith('bower') or
                 package.startswith('npm')):
             raise UnknownManager("Could not identify base package manager for '{}'".format(package))
 

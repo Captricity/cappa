@@ -58,7 +58,7 @@ cappa.add_command(remove)
 
 @click.command()
 def version():
-    click.echo('0.8.2')
+    click.echo('0.8.3')
 cappa.add_command(version)
 
 if __name__ == '__main__':
