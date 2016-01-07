@@ -8,6 +8,7 @@ import subprocess
 import platform
 import json
 import collections
+import six
 from distutils.spawn import find_executable
 from contextlib import contextmanager
 
@@ -81,7 +82,7 @@ class CapPA(object):
         if 'sys' in package_dict:
             self._update_apt_cache()
 
-        for key, packages in package_dict.iteritems():
+        for key, packages in six.iteritems(package_dict):
             try:
                 if key == 'Captricity':
                     self._private_package_dict(packages)
@@ -136,7 +137,7 @@ class CapPA(object):
 
                 manager = self._assert_manager_exists(key)
                 args = prefix + [manager, 'install'] + options
-                for package, version in packages.iteritems():
+                for package, version in six.iteritems(packages):
                     if version is None or connector is None:
                         args.append(package)
                     elif isinstance(version, list):
@@ -155,7 +156,8 @@ class CapPA(object):
 
     def _install_package_list(self, packages):
         split = map(CapPA.extract_manager, packages)
-        for key, packages in cytoolz.itertoolz.groupby(operator.itemgetter(0), split).iteritems():
+        grouped_packages = cytoolz.itertoolz.groupby(operator.itemgetter(0), split)
+        for key, packages in six.iteritems(grouped_packages):
             manager = self._assert_manager_exists(key)
             options = list(set(sum(map(operator.itemgetter(2), packages), [])))
             packages = map(operator.itemgetter(1), packages)
@@ -234,7 +236,7 @@ class CapPA(object):
             prefix = []
             if not IS_MAC:
                 prefix.append('sudo')
-            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'npm-*')])
+            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(str(tmp_location), 'npm-*')])
 
     def _clean_pip_residuals(self):
         """ Check for residual tmp files left by pip """
