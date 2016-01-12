@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.9
+---
+
+- Python3 support
+
 0.8.X
 -----
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
+
 import click
 import json
 import collections
@@ -13,7 +15,7 @@ def cappa():
 
 
 @click.command()
-@click.option('--requirements', '-r', default=None, type=click.File('rb'),
+@click.option('--requirements', '-r', default=None, type=click.File('r'),
               help='install using requirements json file')
 @click.option('--warn', is_flag=True,
               help='print errors as warning and continue')
@@ -40,7 +42,7 @@ def install(requirements, warn, private_https_oauth, use_venv, ignore, only, pac
     if requirements is None:
         pa.install(packages, ignore_managers=ignore)
     else:
-        pa.install(json.loads(requirements.read(), object_pairs_hook=collections.OrderedDict), ignore_managers=ignore)
+        pa.install(json.load(requirements, object_pairs_hook=collections.OrderedDict), ignore_managers=ignore)
 cappa.add_command(install)
 
 
@@ -58,7 +60,7 @@ cappa.add_command(remove)
 
 @click.command()
 def version():
-    click.echo('0.8.3')
+    click.echo('0.9')
 cappa.add_command(version)
 
 if __name__ == '__main__':

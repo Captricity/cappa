@@ -8,6 +8,7 @@ import subprocess
 import platform
 import json
 import collections
+import six
 from distutils.spawn import find_executable
 from contextlib import contextmanager
 
@@ -81,7 +82,7 @@ class CapPA(object):
         if 'sys' in package_dict:
             self._update_apt_cache()
 
-        for key, packages in package_dict.iteritems():
+        for key, packages in six.iteritems(package_dict):
             try:
                 if key == 'Captricity':
                     self._private_package_dict(packages)
@@ -120,30 +121,12 @@ class CapPA(object):
                 if key == 'pip_pypy':
                     prefix.append('pypy')
                     prefix.append('-m')
-
-                range_connector_gte = ">="
-                range_connector_lt = "<"
-                if key == 'npm':
-                    connector = '@'
-                elif key == 'bower':
-                    connector = '#'
-                elif key in ['pip', 'pip3', 'pip_pypy']:
-                    connector = '=='
-                elif key == 'sys':
-                    connector = None  # does not support versioning
+                if key in ['pip', 'pip3', 'pip_pypy']:
+                    subdir_packages, nonsubdir_packages = self._split_pip_packages(packages)
+                    self._install_packages(key, subdir_packages, prefix, options + ['-e'])
+                    self._install_packages(key, nonsubdir_packages, prefix, options)
                 else:
-                    raise UnknownManager("Could not identify base package manager '{}'".format(key))
-
-                manager = self._assert_manager_exists(key)
-                args = prefix + [manager, 'install'] + options
-                for package, version in packages.iteritems():
-                    if version is None or connector is None:
-                        args.append(package)
-                    elif isinstance(version, list):
-                        args.append(package + range_connector_gte + version[0] + ',' + range_connector_lt + version[1])
-                    else:
-                        args.append(package + connector + version)
-                subprocess.check_call(args)
+                    self._install_packages(key, packages, prefix, options)
             except (UnknownManager, MissingExecutable) as e:
                 if self.warn_mode:
                     warn(e)
@@ -155,7 +138,8 @@ class CapPA(object):
 
     def _install_package_list(self, packages):
         split = map(CapPA.extract_manager, packages)
-        for key, packages in cytoolz.itertoolz.groupby(operator.itemgetter(0), split).iteritems():
+        grouped_packages = cytoolz.itertoolz.groupby(operator.itemgetter(0), split)
+        for key, packages in six.iteritems(grouped_packages):
             manager = self._assert_manager_exists(key)
             options = list(set(sum(map(operator.itemgetter(2), packages), [])))
             packages = map(operator.itemgetter(1), packages)
@@ -234,7 +218,7 @@ class CapPA(object):
             prefix = []
             if not IS_MAC:
                 prefix.append('sudo')
-            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'npm-*')])
+            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(str(tmp_location), 'npm-*')])
 
     def _clean_pip_residuals(self):
         """ Check for residual tmp files left by pip """
@@ -290,3 +274,41 @@ class CapPA(object):
                 if add_to_list:
                     new_packages.append(package)
             return new_packages
+
+    def _install_packages(self, manager, packages, prefix, options):
+        if not packages:
+            return
+
+        range_connector_gte = ">="
+        range_connector_lt = "<"
+        if manager == 'npm':
+            connector = '@'
+        elif manager == 'bower':
+            connector = '#'
+        elif manager in ['pip', 'pip3', 'pip_pypy']:
+            connector = '=='
+        elif manager == 'sys':
+            connector = None  # does not support versioning
+        else:
+            raise UnknownManager("Could not identify base package manager '{}'".format(key))
+
+        manager = self._assert_manager_exists(manager)
+        args = prefix + [manager, 'install'] + options
+        for package, version in six.iteritems(packages):
+            if version is None or connector is None:
+                args.append(package)
+            elif isinstance(version, list):
+                args.append(package + range_connector_gte + version[0] + ',' + range_connector_lt + version[1])
+            else:
+                args.append(package + connector + version)
+        subprocess.check_call(args)
+
+    def _split_pip_packages(self, packages):
+        subdir_packages = {}
+        nonsubdir_packages = {}
+        for package, version in six.iteritems(packages):
+            if 'subdirectory=' in package:
+                subdir_packages[package] = version
+            else:
+                nonsubdir_packages[package] = version
+        return subdir_packages, nonsubdir_packages
