@@ -5,6 +5,8 @@
     - Install virtualbox (4.3.28)
     - Install ruby and serverspec gem
     - Install python requirements in test_requirements.txt
+    - ssh-add github ssh key
+    - export GITHUB_TOKEN=<GITHUB API TOKEN>
 
 Run with:
 ```
