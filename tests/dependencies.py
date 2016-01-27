@@ -26,10 +26,3 @@ BOWER_DEPENDENCIES = """{
         "bower": null
     }
 }"""
-
-TSD_DEPENDENCIES = """{
-    "npmg": {
-        "tsd": "0.6.0"
-    }
-}"""
-
