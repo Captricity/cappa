@@ -36,7 +36,7 @@ IS_UBUNTU = platform.dist()[0] == 'Ubuntu'
 class CapPA(object):
     ALL_MANAGERS = ('npm', 'npmg', 'bower', 'tsd', 'pip', 'pip3', 'pip_pypy', 'sys', 'Captricity')
 
-    def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
+    def __init__(self, warn_mode, private_https_oauth=False, use_venv=True, save_js=False):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
         self.tsd = find_executable('tsd')
@@ -48,6 +48,7 @@ class CapPA(object):
         self.warn_mode = warn_mode
         self.private_https_oauth = private_https_oauth
         self.use_venv = use_venv
+        self.save_js = save_js
 
     def install(self, packages, ignore_managers=None):
         if ignore_managers:
@@ -189,7 +190,8 @@ class CapPA(object):
             with open('package.json', 'w') as f:
                 f.write(json.dumps(package_dict))
             subprocess.check_call([npm, 'install'])
-            os.remove('package.json')
+            if not self.save_js:
+                os.remove('package.json')
 
     def _bower_json_install(self, package_dict):
         bower = self._assert_manager_exists('bower')
@@ -197,7 +199,8 @@ class CapPA(object):
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
             subprocess.check_call([bower, 'install'])
-            os.remove('bower.json')
+            if not self.save_js:
+                os.remove('bower.json')
 
     def _setup_bower(self):
         bower_config = os.path.expanduser('~/.bowerrc')
@@ -211,7 +214,8 @@ class CapPA(object):
             with open('tsd.json', 'w') as f:
                 f.write(json.dumps(package_dict))
             subprocess.check_call([tsd, 'reinstall'])
-            os.remove('tsd.json')
+            if not self.save_js:
+                os.remove('tsd.json')
 
     def _clean_npm_residuals(self):
         """ Check for residual tmp files left by npm """

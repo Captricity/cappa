@@ -27,9 +27,18 @@ def cappa():
               help='Comma separated list of managers to ignore')
 @click.option('--only', default='',
               help='Comma separated list of managers to install')
+@click.option('--save-js/--no-save-js', default=False,
+              help='Save generated json files for npm/bower/tsd installs')
 @click.argument('packages', nargs=-1)
-def install(requirements, warn, private_https_oauth, use_venv, ignore, only, packages):
-    pa = CapPA(warn, private_https_oauth, use_venv)
+def install(requirements,
+            warn,
+            private_https_oauth,
+            use_venv,
+            ignore,
+            only,
+            save_js,
+            packages):
+    pa = CapPA(warn, private_https_oauth, use_venv, save_js)
     if ignore and only:
         raise click.ClickException('Only one of ignore-managers and install-only can be set')
 
