@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe command('bower info jquery') do
+describe command('bower list') do
   let(:disable_sudo) { true }
-  its(:stdout) { should contain("version: '2.1.4'") }
+  its(:stdout) { should contain("jquery#2.1.4") }
 end
