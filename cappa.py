@@ -36,7 +36,7 @@ IS_UBUNTU = platform.dist()[0] == 'Ubuntu'
 class CapPA(object):
     ALL_MANAGERS = ('npm', 'npmg', 'bower', 'tsd', 'pip', 'pip3', 'pip_pypy', 'sys', 'Captricity')
 
-    def __init__(self, warn_mode, private_https_oauth=False, use_venv=True):
+    def __init__(self, warn_mode, private_https_oauth=False, use_venv=True, save_js=False):
         self.npm = find_executable('npm')
         self.bower = find_executable('bower')
         self.tsd = find_executable('tsd')
@@ -48,6 +48,7 @@ class CapPA(object):
         self.warn_mode = warn_mode
         self.private_https_oauth = private_https_oauth
         self.use_venv = use_venv
+        self.save_js = save_js
 
     def install(self, packages, ignore_managers=None):
         if ignore_managers:
@@ -112,12 +113,15 @@ class CapPA(object):
                     options.append('-g')
                     if not IS_MAC:
                         prefix.append('sudo')
+                        prefix.append('-E')
                     key = 'npm'
                 elif key == 'sys':
                     options.append('-y')
                     prefix.append('sudo')
+                    prefix.append('-E')
                 elif key in ['pip', 'pip3', 'pip_pypy'] and not self.use_venv:
                     prefix.append('sudo')
+                    prefix.append('-E')
                 if key == 'pip_pypy':
                     prefix.append('pypy')
                     prefix.append('-m')
@@ -144,7 +148,7 @@ class CapPA(object):
             options = list(set(sum(map(operator.itemgetter(2), packages), [])))
             packages = map(operator.itemgetter(1), packages)
             if key == 'sys':
-                prefix = ['sudo']
+                prefix = ['sudo', '-E']
             else:
                 prefix = []
             subprocess.check_call(prefix + [manager] + options + ['install'] + packages)
@@ -159,7 +163,7 @@ class CapPA(object):
             else:
                 raise UnknownManager(message)
 
-        subprocess.check_call(['sudo', 'apt-get', 'update'])
+        subprocess.check_call(['sudo', '-E', 'apt-get', 'update'])
 
     def _private_package_dict(self, package_dict):
         # reconstruct package_dict based on private repo handling mode
@@ -186,7 +190,8 @@ class CapPA(object):
             with open('package.json', 'w') as f:
                 f.write(json.dumps(package_dict))
             subprocess.check_call([npm, 'install'])
-            os.remove('package.json')
+            if not self.save_js:
+                os.remove('package.json')
 
     def _bower_json_install(self, package_dict):
         bower = self._assert_manager_exists('bower')
@@ -194,7 +199,8 @@ class CapPA(object):
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
             subprocess.check_call([bower, 'install'])
-            os.remove('bower.json')
+            if not self.save_js:
+                os.remove('bower.json')
 
     def _setup_bower(self):
         bower_config = os.path.expanduser('~/.bowerrc')
@@ -208,7 +214,8 @@ class CapPA(object):
             with open('tsd.json', 'w') as f:
                 f.write(json.dumps(package_dict))
             subprocess.check_call([tsd, 'reinstall'])
-            os.remove('tsd.json')
+            if not self.save_js:
+                os.remove('tsd.json')
 
     def _clean_npm_residuals(self):
         """ Check for residual tmp files left by npm """
@@ -218,6 +225,7 @@ class CapPA(object):
             prefix = []
             if not IS_MAC:
                 prefix.append('sudo')
+                prefix.append('-E')
             subprocess.check_call(prefix + ['rm', '-rf', os.path.join(str(tmp_location), 'npm-*')])
 
     def _clean_pip_residuals(self):
@@ -230,6 +238,7 @@ class CapPA(object):
             prefix = []
             if not IS_MAC:
                 prefix.append('sudo')
+                prefix.append('-E')
             subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'pip-*')])
 
     @contextmanager
@@ -301,7 +310,7 @@ class CapPA(object):
                 args.append(package + range_connector_gte + version[0] + ',' + range_connector_lt + version[1])
             else:
                 args.append(package + connector + version)
-        subprocess.check_call(args)
+        subprocess.check_call(args, env=os.environ)
 
     def _split_pip_packages(self, packages):
         subdir_packages = {}
