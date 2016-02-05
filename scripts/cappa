@@ -59,6 +59,7 @@ cappa.add_command(install)
 
 @click.command(name='list')
 def list_all():
+    """List installed packages"""
     if find_executable('bower'):
         click.echo('bower')
         # bower -o (offline) option prevents checking for updates when listing packages
@@ -89,7 +90,7 @@ cappa.add_command(remove)
 
 @click.command()
 def version():
-    click.echo('0.9')
+    click.echo('0.10')
 cappa.add_command(version)
 
 if __name__ == '__main__':
