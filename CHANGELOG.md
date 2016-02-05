@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.10
+---
+
+- Add cappa list command
+
 0.9
 ---
 

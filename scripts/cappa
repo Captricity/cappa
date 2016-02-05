@@ -5,6 +5,8 @@ from __future__ import absolute_import
 import click
 import json
 import collections
+import subprocess
+from distutils.spawn import find_executable
 
 from cappa import CapPA
 
@@ -55,10 +57,29 @@ def install(requirements,
 cappa.add_command(install)
 
 
-@click.command()
-def list():
-    click.echo('list')
-cappa.add_command(list)
+@click.command(name='list')
+def list_all():
+    """List installed packages"""
+    if find_executable('bower'):
+        click.echo('bower')
+        # bower -o (offline) option prevents checking for updates when listing packages
+        subprocess.call(['bower', 'list', '-o'])
+    if find_executable('npm'):
+        # npm --depth=0 lists top level packages without listing all sub-dependencies
+        npm_args = ['npm', 'ls', '--depth=0']
+        # npm -g option to list global packages
+        npmg_args = npm_args + ['-g']
+        click.echo('npm')
+        subprocess.call(npm_args)
+        click.echo('npmg')
+        subprocess.call(npmg_args)
+    if find_executable('pip'):
+        click.echo('pip')
+        subprocess.call(['pip', 'list'])
+    if find_executable('dpkg'):
+        click.echo('system')
+        subprocess.call(['dpkg', '-l'])
+cappa.add_command(list_all)
 
 
 @click.command()
@@ -69,7 +90,7 @@ cappa.add_command(remove)
 
 @click.command()
 def version():
-    click.echo('0.9')
+    click.echo('0.10')
 cappa.add_command(version)
 
 if __name__ == '__main__':
