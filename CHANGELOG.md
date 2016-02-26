@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.11
+---
+
+- bower installs using -f
+
 0.10
 ---
 

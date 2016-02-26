@@ -198,7 +198,7 @@ class CapPA(object):
         with self._chdir_to_target_if_set(package_dict):
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([bower, 'install'])
+            subprocess.check_call([bower, 'install', '-f'])
             if not self.save_js:
                 os.remove('bower.json')
 
@@ -299,7 +299,7 @@ class CapPA(object):
         elif manager == 'sys':
             connector = None  # does not support versioning
         else:
-            raise UnknownManager("Could not identify base package manager '{}'".format(key))
+            raise UnknownManager("Could not identify base package manager '{}'".format(manager))
 
         manager = self._assert_manager_exists(manager)
         args = prefix + [manager, 'install'] + options
