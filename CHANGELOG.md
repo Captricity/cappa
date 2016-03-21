@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.12
+---
+
+- When installing from a requirements file, cappa will first change to the directory of the file.
+
 0.11
 ---
 

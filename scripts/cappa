@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 
+import os
 import click
 import json
 import collections
@@ -50,10 +51,11 @@ def install(requirements,
     else:
         ignore = ignore.split(',')
 
-    if requirements is None:
-        pa.install(packages, ignore_managers=ignore)
-    else:
+    if requirements:
+        os.chdir(os.path.dirname(requirements.name))
         pa.install(json.load(requirements, object_pairs_hook=collections.OrderedDict), ignore_managers=ignore)
+    else:
+        pa.install(packages, ignore_managers=ignore)
 cappa.add_command(install)
 
 
@@ -90,7 +92,7 @@ cappa.add_command(remove)
 
 @click.command()
 def version():
-    click.echo('0.11')
+    click.echo('0.12')
 cappa.add_command(version)
 
 if __name__ == '__main__':
