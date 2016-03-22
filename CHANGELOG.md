@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+0.13
+
+- Fix installing from a requirements file, when under the same directory as the file.
+
 0.12
 ---
 

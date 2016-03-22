@@ -52,7 +52,9 @@ def install(requirements,
         ignore = ignore.split(',')
 
     if requirements:
-        os.chdir(os.path.dirname(requirements.name))
+        requirements_dir = os.path.dirname(requirements.name)
+        if requirements_dir:
+            os.chdir(requirements_dir)
         pa.install(json.load(requirements, object_pairs_hook=collections.OrderedDict), ignore_managers=ignore)
     else:
         pa.install(packages, ignore_managers=ignore)
@@ -92,7 +94,7 @@ cappa.add_command(remove)
 
 @click.command()
 def version():
-    click.echo('0.12')
+    click.echo('0.13')
 cappa.add_command(version)
 
 if __name__ == '__main__':
