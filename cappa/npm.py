@@ -26,7 +26,7 @@ class Npm(CapPA):
         range_connector_lt = "<"
         connector = '@'
         manager = self.find_executable()
-        args = [manager, 'install']
+        args = [manager, 'install', '--progress=false']
         for package, version in six.iteritems(packages):
             if version is None:
                 args.append(package)
@@ -51,6 +51,6 @@ class Npm(CapPA):
         with self._chdir_to_target_if_set(package_dict):
             with open('package.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([npm, 'install'])
+            subprocess.check_call([npm, 'install', '--progress=false'])
             if not self.save_js:
                 os.remove('package.json')
