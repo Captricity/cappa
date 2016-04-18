@@ -1,7 +1,14 @@
 Change Log
 ==========
 
+0.14
+----
+
+- Internal refactoring
+- Deprecate list intall support
+
 0.13
+----
 
 - Fix installing from a requirements file, when under the same directory as the file.
 

@@ -5,11 +5,13 @@ from __future__ import absolute_import
 import os
 import click
 import json
+import six
 import collections
 import subprocess
 from distutils.spawn import find_executable
 
-from cappa import CapPA
+from cappa.factory import manager_key_to_cappa, private_manager_key_to_cappa
+from cappa.enums import ALL_MANAGERS
 
 
 @click.group()
@@ -32,32 +34,39 @@ def cappa():
               help='Comma separated list of managers to install')
 @click.option('--save-js/--no-save-js', default=False,
               help='Save generated json files for npm/bower/tsd installs')
-@click.argument('packages', nargs=-1)
 def install(requirements,
             warn,
             private_https_oauth,
             use_venv,
             ignore,
             only,
-            save_js,
-            packages):
-    pa = CapPA(warn, private_https_oauth, use_venv, save_js)
+            save_js):
     if ignore and only:
         raise click.ClickException('Only one of ignore-managers and install-only can be set')
 
     if only:
         only = only.split(',')
-        ignore = filter(lambda manager: manager not in only, CapPA.ALL_MANAGERS)
+        ignore = filter(lambda manager: manager not in only, ALL_MANAGERS)
     else:
         ignore = ignore.split(',')
 
-    if requirements:
-        requirements_dir = os.path.dirname(requirements.name)
-        if requirements_dir:
-            os.chdir(requirements_dir)
-        pa.install(json.load(requirements, object_pairs_hook=collections.OrderedDict), ignore_managers=ignore)
-    else:
-        pa.install(packages, ignore_managers=ignore)
+    requirements_dir = os.path.dirname(requirements.name)
+    if requirements_dir:
+        os.chdir(requirements_dir)
+
+    requirements = json.load(requirements, object_pairs_hook=collections.OrderedDict)
+    for key, packages in six.iteritems(requirements):
+        if key in ignore:
+            continue
+        if key == 'Captricity':
+            for private_key, private_packages in packages.iteritems():
+                CappaClass = private_manager_key_to_cappa(private_key)
+                pa = CappaClass(key, warn, private_https_oauth, use_venv, save_js)
+                pa.install(private_packages)
+        else:
+            CappaClass = manager_key_to_cappa(key)
+            pa = CappaClass(warn, private_https_oauth, use_venv, save_js)
+            pa.install(packages)
 cappa.add_command(install)
 
 

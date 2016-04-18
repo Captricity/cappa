@@ -22,7 +22,6 @@ class RegressionTestCases(VagrantTestCase):
         """
         self.install_requirements_json(PYTHON_DEPENDENCIES)
         self.run_fabric_task(self.install_requirements_json_captricity_factory(TEST_INSTALL_CAPTRICITY_VERSION_JSON))
-        import pdb; pdb.set_trace()
         self.run_spec('env_var_regression')
 
     def install_requirements_json_captricity_factory(self, requirements_json):
