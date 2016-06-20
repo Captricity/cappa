@@ -47,7 +47,7 @@ class Npm(CapPA):
         subprocess.check_call(prefix + ['rm', '-rf', os.path.join(str(tmp_location), 'npm-*')])
 
     def _npm_package_json_install(self, package_dict):
-        npm = self._assert_manager_exists('npm')
+        npm = self.find_executable()
         with self._chdir_to_target_if_set(package_dict):
             with open('package.json', 'w') as f:
                 f.write(json.dumps(package_dict))
