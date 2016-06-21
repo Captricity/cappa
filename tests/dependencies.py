@@ -33,3 +33,8 @@ TSD_DEPENDENCIES = """{
     }
 }"""
 
+TYPINGS_DEPENDENCIES = """{
+    "npmg": {
+        "typings": "1.3.0"
+    }
+}"""
