@@ -59,7 +59,7 @@ def install(requirements,
         if key in ignore:
             continue
         if key == 'Captricity':
-            for private_key, private_packages in packages.iteritems():
+            for private_key, private_packages in six.iteritems(packages):
                 CappaClass = private_manager_key_to_cappa(private_key)
                 pa = CappaClass(key, warn, private_https_oauth, use_venv, save_js)
                 pa.install(private_packages)
