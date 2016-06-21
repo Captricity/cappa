@@ -10,6 +10,7 @@ from .npmg import NpmG
 from .tsd import Tsd
 
 from .private.pip import PrivatePip
+from .private.pip3 import PrivatePip3
 
 
 MANAGER_MAP = {
@@ -23,7 +24,8 @@ MANAGER_MAP = {
     'tsd': Tsd
 }
 PRIVATE_MANAGER_MAP = {
-    'pip': PrivatePip
+    'pip': PrivatePip,
+    'pip3': PrivatePip3
 }
 
 
