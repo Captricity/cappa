@@ -33,7 +33,7 @@ def cappa():
 @click.option('--only', default='',
               help='Comma separated list of managers to install')
 @click.option('--save-js/--no-save-js', default=False,
-              help='Save generated json files for npm/bower/tsd installs')
+              help='Save generated json files for npm/bower/typings/tsd installs')
 def install(requirements,
             warn,
             private_https_oauth,

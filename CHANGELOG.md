@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+0.15
+----
+
+- Typings support
+- Private pip3 support
+
 0.14
 ----
 
