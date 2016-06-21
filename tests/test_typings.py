@@ -4,7 +4,7 @@ from .base import VagrantTestCase
 from tests.dependencies import NPM_DEPENDENCIES, TYPINGS_DEPENDENCIES
 
 
-class TsdTestCases(VagrantTestCase):
+class TypingsTestCases(VagrantTestCase):
 
     def test_basic(self):
         self.install_requirements_json(NPM_DEPENDENCIES)
