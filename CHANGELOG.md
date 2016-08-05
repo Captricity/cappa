@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.16
+---
+
+- YAML support
+
 0.15
 ----
 

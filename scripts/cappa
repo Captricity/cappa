@@ -8,6 +8,7 @@ import json
 import six
 import collections
 import subprocess
+import yaml
 from distutils.spawn import find_executable
 
 from cappa.factory import manager_key_to_cappa, private_manager_key_to_cappa
@@ -21,7 +22,7 @@ def cappa():
 
 @click.command()
 @click.option('--requirements', '-r', default=None, type=click.File('r'),
-              help='install using requirements json file')
+              help='install using requirements json/yaml file')
 @click.option('--warn', is_flag=True,
               help='print errors as warning and continue')
 @click.option('--private-https-oauth', is_flag=True,
@@ -54,7 +55,20 @@ def install(requirements,
     if requirements_dir:
         os.chdir(requirements_dir)
 
-    requirements = json.load(requirements, object_pairs_hook=collections.OrderedDict)
+    if requirements.name.endswith('.json'):
+        requirements = json.load(requirements, object_pairs_hook=collections.OrderedDict)
+    elif requirements.name.endswith('.yaml'):
+        # this is a convoluted way to use an OrderedDict as the primary dictionary
+        # https://stackoverflow.com/questions/5121931/in-python-how-can-you-load-yaml-mappings-as-ordereddicts
+        class OrderedLoader(yaml.Loader):
+            pass
+
+        def construct_mapping(loader, node):
+            loader.flatten_mapping(node)
+            return collections.OrderedDict(loader.construct_pairs(node))
+        OrderedLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, construct_mapping)
+        requirements = yaml.load(requirements, OrderedLoader)
+
     for key, packages in six.iteritems(requirements):
         if key in ignore:
             continue

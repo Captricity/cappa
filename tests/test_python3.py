@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from .base import VagrantTestCase
 from fabric.api import task, sudo, cd
 
+
 @task
 def setup_python3_cappa():
     """Installs cappa on the vagrant box."""

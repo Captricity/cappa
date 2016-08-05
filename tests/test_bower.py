@@ -30,4 +30,3 @@ TEST_INSTALL_BOWER_VERSION_JSON = """{
         ]
     }
 }"""
-

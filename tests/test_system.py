@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from .base import VagrantTestCase
 
+
 class SystemTestCases(VagrantTestCase):
 
     def test_basic(self):
@@ -10,7 +11,7 @@ class SystemTestCases(VagrantTestCase):
     def test_install_single(self):
         self.install_requirements_json(TEST_INSTALL_SINGLE_REQ_JSON)
         self.run_spec('system_install_single_spec')
-        
+
     def test_install_multiple(self):
         self.install_requirements_json(TEST_INSTALL_MULTIPLE_REQ_JSON)
         self.run_spec('system_install_multiple_spec')
