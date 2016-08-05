@@ -7,9 +7,9 @@ from tests.dependencies import NPM_DEPENDENCIES, BOWER_DEPENDENCIES
 class CaptricityTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(NPM_DEPENDENCIES)
-        self.install_requirements_json(BOWER_DEPENDENCIES)
-        self.install_requirements_json(TEST_INSTALL_BOWER_VERSION_JSON)
+        self.install_requirements_file(NPM_DEPENDENCIES)
+        self.install_requirements_file(BOWER_DEPENDENCIES)
+        self.install_requirements_file(TEST_INSTALL_BOWER_VERSION_JSON)
         self.run_spec('bower_install_basic_spec')
 
 TEST_INSTALL_BOWER_VERSION_JSON = """{

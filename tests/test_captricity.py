@@ -12,8 +12,8 @@ from tests.dependencies import VIRTUALENV_DEPENDENCIES, PYTHON_DEPENDENCIES
 class CaptricityTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(PYTHON_DEPENDENCIES)
-        self.install_requirements_json(VIRTUALENV_DEPENDENCIES)
+        self.install_requirements_file(PYTHON_DEPENDENCIES)
+        self.install_requirements_file(VIRTUALENV_DEPENDENCIES)
         self.run_fabric_task(self.install_requirements_json_captricity_factory(TEST_INSTALL_CAPTRICITY_VERSION_JSON))
         self.run_spec('captricity_install_basic_spec')
 

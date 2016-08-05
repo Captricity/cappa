@@ -6,7 +6,7 @@ from .base import VagrantTestCase
 class CappaListTestCase(VagrantTestCase):
 
     def test_list(self):
-        self.install_requirements_json(TEST_FULL_INSTALL_JSON)
+        self.install_requirements_yaml(TEST_FULL_INSTALL_JSON)
         self.run_spec('cappa_list_spec')
 
 TEST_FULL_INSTALL_JSON = """{

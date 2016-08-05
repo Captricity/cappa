@@ -26,8 +26,9 @@ def install_requirements_without_virtualenv(requirements_json):
 
     return requirements_json_install
 
+
 def install_requirements(requirements_json):
-    """Given the contents of the requirements.json file, this will return a
+    """Given the contents of the requirements.json/yaml file, this will return a
     fabric task that will create the file on the remote machine and install the
     requirements using cappa.
     """
@@ -73,13 +74,13 @@ class VagrantTestCase(unittest.TestCase):
         """Ensure cappa is installed."""
         self.run_fabric_task(setup_cappa)
 
-    def install_requirements_json(self, requirements_json):
-        """Given the contents of the requirements.json file, upload to vagrant
+    def install_requirements_file(self, requirements_file):
+        """Given the contents of the requirements.json/yaml file, upload to vagrant
         box and install it.
         """
-        self.run_fabric_task(install_requirements_without_virtualenv(requirements_json))
+        self.run_fabric_task(install_requirements_without_virtualenv(requirements_file))
 
-    def install_requirements_json_with_virtualenv(self, requirements_json):
+    def install_requirements_file_with_virtualenv(self, requirements_json):
         """Same as the funciton above, except run in virtual env."""
         self.run_fabric_task(install_requirements(requirements_json))
 
