@@ -25,24 +25,45 @@ Available package managers
 Example requirements.json file
 ------------------------------
 
-```javascript
+```json
 {
-	"sys": {
-		"postgresql-client": null,
-		"libpq-dev": null
-	},
-	"pip": {
-		"psycopg2": null
-	},
-	"npmg": {
-		"bower": "1.3.12",
-		"gulp": null
-	},
-	"npm": {
-		"gulp-if": null
-	},
-	"bower": {
-		"jquery": null
-	}
+    "sys": {
+        "postgresql-client": null,
+        "libpq-dev": null
+    },
+    "pip": {
+        "psycopg2": null
+    },
+    "npmg": {
+        "bower": "1.3.12",
+        "gulp": null
+    },
+    "npm": {
+        "gulp-if": null
+    },
+    "bower": {
+        "jquery": null
+    }
 }
+```
+
+Example requirements.yaml file
+------------------------------
+```yaml
+sys:
+    postgresql-client: null
+    libpq-dev: null
+
+pip:
+    psycopg2: null
+
+npmg:
+    bower: 1.3.12
+    gulp: null
+
+npm:
+    gulp-if: null
+
+bower:
+    jquery: null
 ```

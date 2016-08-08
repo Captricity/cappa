@@ -20,7 +20,7 @@ class RegressionTestCases(VagrantTestCase):
         Cappa v0.9 had a bug where environment vars did not propagate to the
         sudo env when using the --no-venv option
         """
-        self.install_requirements_json(PYTHON_DEPENDENCIES)
+        self.install_requirements_file(PYTHON_DEPENDENCIES)
         self.run_fabric_task(self.install_requirements_json_captricity_factory(TEST_INSTALL_CAPTRICITY_VERSION_JSON))
         self.run_spec('env_var_regression')
 

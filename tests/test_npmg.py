@@ -7,8 +7,8 @@ from tests.dependencies import NPM_DEPENDENCIES
 class NpmgTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(NPM_DEPENDENCIES)
-        self.install_requirements_json(TEST_INSTALL_NPMG_VERSION_JSON)
+        self.install_requirements_file(NPM_DEPENDENCIES)
+        self.install_requirements_file(TEST_INSTALL_NPMG_VERSION_JSON)
         self.run_spec('npmg_install_basic_spec')
 
 

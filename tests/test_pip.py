@@ -19,18 +19,18 @@ def setup_pypy():
 class PipTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(PYTHON_DEPENDENCIES)
-        self.install_requirements_json(VIRTUALENV_DEPENDENCIES)
-        self.install_requirements_json_with_virtualenv(TEST_INSTALL_PIP_VERSION_JSON)
+        self.install_requirements_file(PYTHON_DEPENDENCIES)
+        self.install_requirements_file(VIRTUALENV_DEPENDENCIES)
+        self.install_requirements_file_with_virtualenv(TEST_INSTALL_PIP_VERSION_JSON)
         self.run_spec('pip_install_basic_spec')
 
     def test_pip3(self):
-        self.install_requirements_json(TEST_INSTALL_PIP3_VERSION_JSON)
+        self.install_requirements_file(TEST_INSTALL_PIP3_VERSION_JSON)
         self.run_spec('pip3_install_basic_spec')
 
     def test_pip_pypy(self):
         self.run_fabric_task(setup_pypy)
-        self.install_requirements_json(TEST_INSTALL_PIPPYPY_VERSION_JSON)
+        self.install_requirements_file(TEST_INSTALL_PIPPYPY_VERSION_JSON)
         self.run_spec('pip_pypy_install_basic_spec')
 
 TEST_INSTALL_PIP_VERSION_JSON = """{

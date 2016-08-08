@@ -7,9 +7,9 @@ from tests.dependencies import NPM_DEPENDENCIES, TSD_DEPENDENCIES
 class TsdTestCases(VagrantTestCase):
 
     def test_basic(self):
-        self.install_requirements_json(NPM_DEPENDENCIES)
-        self.install_requirements_json(TSD_DEPENDENCIES)
-        self.install_requirements_json(TEST_TSD_VERSION_JSON)
+        self.install_requirements_file(NPM_DEPENDENCIES)
+        self.install_requirements_file(TSD_DEPENDENCIES)
+        self.install_requirements_file(TEST_TSD_VERSION_JSON)
         self.run_spec('tsd_install_basic_spec')
 
 
