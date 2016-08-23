@@ -1,5 +1,5 @@
 require 'spec_helper'
 
 describe command('cappa version') do
-    its(:stdout) { should match(/0.13/) }
+    its(:stdout) { should match(/0.16.1/) }
 end
