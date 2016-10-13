@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name="cappa",
-    version="0.16.1",
-    description="Package installer for Captricity. Supports apt-get, pip, bower, and npm.",
+    version="0.17.0",
+    description="Package installer for Captricity. Supports apt-get, pip, bower, npm, and yarn.",
     author="Yoriyasu Yano",
     author_email="yorinasub17@gmail.com",
 

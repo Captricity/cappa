@@ -12,6 +12,13 @@ def setup_cappa():
         sudo('python setup.py install')
 
 
+@task
+def setup_yarn():
+    """Installs yarn on the vagrant box."""
+    sudo('apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3')
+    run('echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list')
+
+
 def install_requirements_without_virtualenv(requirements_json):
     """Given the contents of the requirements.json file, this will return a
     fabric task that will create the file on the remote machine and install the
@@ -57,6 +64,7 @@ class VagrantTestCase(unittest.TestCase):
     def setUp(self):
         self._setup_vagrant()
         self._setup_cappa()
+        self._setup_yarn()
 
     def tearDown(self):
         self.vagrant.destroy()
@@ -73,6 +81,11 @@ class VagrantTestCase(unittest.TestCase):
     def _setup_cappa(self):
         """Ensure cappa is installed."""
         self.run_fabric_task(setup_cappa)
+
+    def _setup_yarn(self):
+        """Ensure yarn is installed.
+        This is necessary because at the moment there yarn is not officially part of ubuntu's repository"""
+        self.run_fabric_task(setup_yarn)
 
     def install_requirements_file(self, requirements_file):
         """Given the contents of the requirements.json/yaml file, upload to vagrant
