@@ -12,13 +12,6 @@ def setup_cappa():
         sudo('python setup.py install')
 
 
-@task
-def setup_yarn():
-    """Installs yarn on the vagrant box."""
-    sudo('apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3')
-    run('echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list')
-
-
 def install_requirements_without_virtualenv(requirements_json):
     """Given the contents of the requirements.json file, this will return a
     fabric task that will create the file on the remote machine and install the
@@ -34,7 +27,7 @@ def install_requirements_without_virtualenv(requirements_json):
     return requirements_json_install
 
 
-def install_requirements(requirements_json):
+def install_requirements(requirements_json, ext):
     """Given the contents of the requirements.json/yaml file, this will return a
     fabric task that will create the file on the remote machine and install the
     requirements using cappa.
@@ -43,9 +36,10 @@ def install_requirements(requirements_json):
     @task
     def requirements_json_install_virtualenv():
         with cd('/home/vagrant'):
-            put(StringIO(requirements_json), '/home/vagrant/requirements.json')
+            fname = '/home/vagrant/requirements.' + ext
+            put(StringIO(requirements_json), fname)
             run('virtualenv venv')
-            run('source venv/bin/activate; cappa install -r /home/vagrant/requirements.json')
+            run('source venv/bin/activate; cappa install -r ' + fname)
 
     return requirements_json_install_virtualenv
 
@@ -64,7 +58,6 @@ class VagrantTestCase(unittest.TestCase):
     def setUp(self):
         self._setup_vagrant()
         self._setup_cappa()
-        self._setup_yarn()
 
     def tearDown(self):
         self.vagrant.destroy()
@@ -82,20 +75,15 @@ class VagrantTestCase(unittest.TestCase):
         """Ensure cappa is installed."""
         self.run_fabric_task(setup_cappa)
 
-    def _setup_yarn(self):
-        """Ensure yarn is installed.
-        This is necessary because at the moment there yarn is not officially part of ubuntu's repository"""
-        self.run_fabric_task(setup_yarn)
-
     def install_requirements_file(self, requirements_file):
         """Given the contents of the requirements.json/yaml file, upload to vagrant
         box and install it.
         """
         self.run_fabric_task(install_requirements_without_virtualenv(requirements_file))
 
-    def install_requirements_file_with_virtualenv(self, requirements_json):
+    def install_requirements_file_with_virtualenv(self, requirements_json, ext='json'):
         """Same as the funciton above, except run in virtual env."""
-        self.run_fabric_task(install_requirements(requirements_json))
+        self.run_fabric_task(install_requirements(requirements_json, ext))
 
     def run_spec(self, spec_name):
         """Meat of the framework. Will run the specified serverspec file.

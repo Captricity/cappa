@@ -25,7 +25,7 @@ YARN_DEPENDENCIES = """{
     "sys": {
         "yarn": null,
         "git": null,
-        "nodejs-legacy": null
+        "nodejs": null
     }
 }"""
 

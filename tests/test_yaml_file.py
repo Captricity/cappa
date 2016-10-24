@@ -9,7 +9,7 @@ class YamlTestCases(VagrantTestCase):
     def test_basic(self):
         self.install_requirements_file(PYTHON_DEPENDENCIES)
         self.install_requirements_file(VIRTUALENV_DEPENDENCIES)
-        self.install_requirements_file_with_virtualenv(TEST_INSTALL_PIP_VERSION_YAML)
+        self.install_requirements_file_with_virtualenv(TEST_INSTALL_PIP_VERSION_YAML, ext='yaml')
         self.run_spec('pip_install_basic_spec')
 
 
