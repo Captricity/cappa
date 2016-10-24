@@ -40,6 +40,6 @@ class Yarn(CapPA):
         with self._chdir_to_target_if_set(package_dict):
             with open('package.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([yarn, 'install', '--progress=false'])
+            subprocess.check_call([yarn, 'install'])
             if not self.save_js:
                 os.remove('package.json')

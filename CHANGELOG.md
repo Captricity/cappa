@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.17
+---
+
+- Yarn support
+
 0.16
 ---
 
