@@ -21,6 +21,14 @@ NPM_DEPENDENCIES = """{
     }
 }"""
 
+YARN_DEPENDENCIES = """{
+    "sys": {
+        "yarn": null,
+        "git": null,
+        "nodejs": null
+    }
+}"""
+
 BOWER_DEPENDENCIES = """{
     "npmg": {
         "bower": null
