@@ -51,7 +51,10 @@ class Pip(CapPA):
         if not IS_MAC:
             prefix.append('sudo')
             prefix.append('-E')
-        subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'pip-*')])
+        try:
+            subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'pip-*')])
+        except Exception:
+            pass
 
     def _split_pip_packages(self, packages):
         subdir_packages = {}
