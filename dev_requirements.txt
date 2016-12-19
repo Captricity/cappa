@@ -1,0 +1,5 @@
+-rtest_requirements.txt
+-rrequirements.txt
+ipython
+ipdb
+bumpversion

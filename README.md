@@ -67,3 +67,17 @@ npm:
 bower:
     jquery: null
 ```
+
+Development
+-----------
+
+Get all the requirements for development through `dev_requirements.txt`:
+
+    pip install -r dev_requirements.txt
+
+
+Use `bumpversion` when updating the version, so that you won't miss any files:
+
+    bumpversion minor
+
+Also don't forget to update `CHANGELOG.md` with your changes.
