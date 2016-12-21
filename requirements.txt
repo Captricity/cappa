@@ -2,3 +2,4 @@ click
 cytoolz
 six
 PyYAML
+ansible

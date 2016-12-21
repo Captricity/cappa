@@ -9,6 +9,9 @@ from fabric.api import env, execute, task, sudo, put, run, cd
 def setup_cappa():
     """Installs cappa on the vagrant box."""
     with cd('/vagrant'):
+        sudo('apt-get update')
+        sudo('apt-get install -yy libffi-dev libssl-dev python-pip')
+        sudo('pip install --upgrade setuptools')
         sudo('python setup.py install')
 
 

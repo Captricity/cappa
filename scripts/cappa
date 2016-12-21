@@ -9,8 +9,10 @@ import six
 import collections
 import subprocess
 import yaml
+import tempfile
 from distutils.spawn import find_executable
 
+from cappa.ansible.base import AnsiblePlaybookFactory
 from cappa.factory import manager_key_to_cappa, private_manager_key_to_cappa
 from cappa.enums import ALL_MANAGERS
 
@@ -51,6 +53,10 @@ def install(requirements,
     else:
         ignore = ignore.split(',')
 
+    options = {}
+    options['use_venv'] = use_venv
+    options['save_js'] = save_js
+
     requirements_dir = os.path.dirname(requirements.name)
     if requirements_dir:
         os.chdir(requirements_dir)
@@ -69,18 +75,17 @@ def install(requirements,
         OrderedLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, construct_mapping)
         requirements = yaml.load(requirements, OrderedLoader)
 
+    playbook = AnsiblePlaybookFactory()
     for key, packages in six.iteritems(requirements):
         if key in ignore:
             continue
-        if key == 'Captricity':
-            for private_key, private_packages in six.iteritems(packages):
-                CappaClass = private_manager_key_to_cappa(private_key)
-                pa = CappaClass(key, warn, private_https_oauth, use_venv, save_js)
-                pa.install(private_packages)
-        else:
-            CappaClass = manager_key_to_cappa(key)
-            pa = CappaClass(warn, private_https_oauth, use_venv, save_js)
-            pa.install(packages)
+        requirements_to_playbook_tasks = manager_key_to_cappa(key)
+        tasks = requirements_to_playbook_tasks(packages, **options)
+        playbook.extend(tasks)
+
+    with tempfile.NamedTemporaryFile() as outfile:
+        playbook.construct(outfile)
+        subprocess.call('ansible-playbook ' + outfile.name, shell=True)
 cappa.add_command(install)
 
 
