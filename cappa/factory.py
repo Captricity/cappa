@@ -1,38 +1,34 @@
 from __future__ import print_function, absolute_import
 
-from .pip import Pip
-from .pip3 import Pip3
-from .pip_pypy import PipPypy
-from .apt import Apt
-from .bower import Bower
-from .npm import Npm
-from .npmg import NpmG
-from .yarn import Yarn
-from .yarng import YarnG
-from .tsd import Tsd
-from .typings import Typings
+from .ansible.apt import requirements_to_playbook_tasks as apt
+from .ansible.pip import requirements_to_playbook_tasks as pip
+from .ansible.npm import requirements_to_playbook_tasks as npm
+from .ansible.npmg import requirements_to_playbook_tasks as npmg
+from .ansible.bower import requirements_to_playbook_tasks as bower
 from .exceptions import UnknownManager
 
-from .private.pip import PrivatePip
-from .private.pip3 import PrivatePip3
+"""
+TODO:
+    - pip3
+    - pip_pypy
+    - tsd
+    - typings
+    - yarn
+    - yarng
+    - private pip
+    - private pip3
+    - private apt
+"""
 
 
 MANAGER_MAP = {
-    'pip': Pip,
-    'pip3': Pip3,
-    'pip_pypy': PipPypy,
-    'sys': Apt,
-    'npm': Npm,
-    'npmg': NpmG,
-    'yarn': Yarn,
-    'yarng': YarnG,
-    'bower': Bower,
-    'typings': Typings,
-    'tsd': Tsd
+    'sys': apt,
+    'pip': pip,
+    'npm': npm,
+    'npmg': npmg,
+    'bower': bower
 }
 PRIVATE_MANAGER_MAP = {
-    'pip': PrivatePip,
-    'pip3': PrivatePip3
 }
 
 
