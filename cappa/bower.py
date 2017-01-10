@@ -6,7 +6,6 @@ import json
 import subprocess
 
 from .base import CapPA
-from .enums import IS_MAC
 
 
 class Bower(CapPA):
@@ -15,6 +14,12 @@ class Bower(CapPA):
         super(Bower, self).__init__(*flags)
         self.name = 'bower'
         self.friendly_name = 'bower'
+
+    def find_executable(self):
+        local_bower = 'node_modules/.bin/bower'
+        if os.path.exists(local_bower):
+            return local_bower
+        return super(Bower, self).find_executable()
 
     def _install_package_dict(self, packages):
         self._setup_bower()
@@ -44,8 +49,8 @@ class Bower(CapPA):
                 f.write('{"analytics": false}')
 
     def _bower_json_install(self, package_dict):
-        bower = self.find_executable()
         with self._chdir_to_target_if_set(package_dict):
+            bower = self.find_executable()
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
             subprocess.check_call([bower, 'install', '-f'])

@@ -26,7 +26,7 @@ class CapPA(object):
             if self.warn_mode:
                 warn(e)
             else:
-                raise e
+                raise
         finally:
             self._clean()
 

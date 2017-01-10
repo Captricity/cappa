@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.18
+---
+
+- bower install now prefers to use the bower in the local node_modules folder
+
 0.17
 ---
 
