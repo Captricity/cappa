@@ -6,6 +6,7 @@ import subprocess
 
 from .base import CapPA
 from .enums import IS_MAC
+from .utils import warn
 
 
 class Pip(CapPA):
@@ -53,8 +54,8 @@ class Pip(CapPA):
             prefix.append('-E')
         try:
             subprocess.check_call(prefix + ['rm', '-rf', os.path.join(tmp_location, 'pip-*')])
-        except Exception:
-            pass
+        except Exception as exc:
+            warn('error removing pip files', exc)
 
     def _split_pip_packages(self, packages):
         subdir_packages = {}
