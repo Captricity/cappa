@@ -20,6 +20,8 @@ Available package managers
 - pip: Use to specify python packages to install
 - npmg: Use to specify npm packages to install globally (`npm -g`)
 - npm: Use to specify local npm packages to install
+- yarng: Same as npmg, except uses yarn as the package manager
+- yarn: Same as npm, except uses yarn as the package manager
 - bower: Use to specify bower packages to install
 
 Example requirements.json file
