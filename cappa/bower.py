@@ -53,6 +53,6 @@ class Bower(CapPA):
             bower = self.find_executable()
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([bower, 'install', '-f'])
+            subprocess.check_call([bower, 'install', '-f', '--allow-root'])
             if not self.save_js:
                 os.remove('bower.json')
