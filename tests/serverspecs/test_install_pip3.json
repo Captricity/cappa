@@ -1,0 +1,9 @@
+{
+    "sys": {
+        "python3-pip": null,
+        "git": null
+    },
+    "pip3": {
+        "django": "1.8.5"
+    }
+}

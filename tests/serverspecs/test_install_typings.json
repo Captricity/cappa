@@ -1,0 +1,8 @@
+{
+    "typings": {
+        "path": "typings",
+        "dependencies": {
+            "listify": "registry:npm/listify#1.0.0+20160211003958"
+        }
+    }
+}

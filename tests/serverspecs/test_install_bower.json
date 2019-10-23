@@ -1,0 +1,18 @@
+{
+    "bower": {
+        "name": "captricity",
+        "version": "0.1.1",
+        "description": "Captricity, Inc.",
+        "dependencies": {
+            "jquery": "2.1.4"
+        },
+        "private": true,
+        "ignore": [
+            "**/.*",
+            "node_modules",
+            "bower_components",
+            "test",
+            "tests"
+        ]
+    }
+}

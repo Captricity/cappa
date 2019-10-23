@@ -1,0 +1,5 @@
+{
+    "Captricity": {
+        "pip": ["internal-api-clients@v0.0.3"]
+    }
+}

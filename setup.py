@@ -10,6 +10,6 @@ setup(
     packages=find_packages(),
     scripts=["scripts/cappa"],
     install_requires=open("requirements.txt").read().split(),
-    tests_requires=open("test_requirements.txt").read().split(),
+    tests_require=open("test_requirements.txt").read().split(),
     test_suite='tests'
 )

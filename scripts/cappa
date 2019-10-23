@@ -90,7 +90,7 @@ def list_all():
     if find_executable('bower'):
         click.echo('bower')
         # bower -o (offline) option prevents checking for updates when listing packages
-        subprocess.call(['bower', 'list', '-o'])
+        subprocess.call(['bower', 'list', '-o', '--allow-root'])
     if find_executable('npm'):
         # npm --depth=0 lists top level packages without listing all sub-dependencies
         npm_args = ['npm', 'ls', '--depth=0']

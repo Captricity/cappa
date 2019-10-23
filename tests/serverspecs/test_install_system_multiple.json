@@ -1,0 +1,6 @@
+{
+    "sys": {
+        "postgresql-client": null,
+        "libpq-dev": null
+    }
+}

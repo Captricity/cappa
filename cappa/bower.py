@@ -32,7 +32,7 @@ class Bower(CapPA):
         range_connector_lt = "<"
         connector = '#'
         manager = self.find_executable()
-        args = [manager, 'install']
+        args = [manager, '--allow-root', 'install']
         for package, version in six.iteritems(packages):
             if version is None:
                 args.append(package)

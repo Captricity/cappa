@@ -1,0 +1,5 @@
+{
+    "pip": {
+        "django-extensions": "1.5.5"
+    }
+}

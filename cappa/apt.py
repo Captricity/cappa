@@ -21,7 +21,7 @@ class Apt(CapPA):
 
         manager = self.find_executable()
         # Currently no versioning support for apt
-        args = ['sudo', '-E', manager, 'install', '-y'] + list(packages.keys())
+        args = ['sudo', '-E', manager, 'install', '--reinstall', '-y'] + list(packages.keys())
         subprocess.check_call(args, env=os.environ)
 
     def _update_apt_cache(self):

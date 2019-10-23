@@ -83,3 +83,24 @@ Use `bumpversion` when updating the version, so that you won't miss any files:
     bumpversion minor
 
 Also don't forget to update `CHANGELOG.md` with your changes.
+
+
+Testing
+-------
+Build an image with cappa installed  
+- time docker build -t cappa .
+
+Work from serverspec/ 
+- cd cappa/tests/serverspec
+
+Then, run tests
+- ./test.sh <module> <file extension> <GITHUB_TOKEN><debug-mode>
+- ./test_all.sh <GITHUB_TOKEN><debug-mode>
+
+Create Docker container using image 
+- docker run -it --name test_cappa cappa
+
+Run individual tests
+- rake spec SPEC=spec/default/<name_of_spec.rb>
+
+
