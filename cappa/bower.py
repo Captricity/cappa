@@ -32,7 +32,7 @@ class Bower(CapPA):
         range_connector_lt = "<"
         connector = '#'
         manager = self.find_executable()
-        args = [manager, '--allow-root', 'install']
+        args = [manager, 'install']
         for package, version in six.iteritems(packages):
             if version is None:
                 args.append(package)
@@ -53,6 +53,6 @@ class Bower(CapPA):
             bower = self.find_executable()
             with open('bower.json', 'w') as f:
                 f.write(json.dumps(package_dict))
-            subprocess.check_call([bower, 'install', '-f', '--allow-root'])
+            subprocess.check_call([bower, 'install', '-f'])
             if not self.save_js:
                 os.remove('bower.json')

@@ -28,4 +28,6 @@ RUN apt-get update \
     && gem install bundler \
     && bundle install \
     && pypy get-pip.py \ 
-    && pip install virtualenv
+    && pip install virtualenv \
+    && echo '{ "allow_root": true }' > /root/.bowerrc
+
