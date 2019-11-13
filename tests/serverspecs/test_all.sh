@@ -27,5 +27,6 @@ if [ ${#fails[@]} == 0 ]; then
 else
     echo "FAILURES: "
     printf "%s" "${fails[@]}"
+    echo ""
 fi
 echo "*************************"
