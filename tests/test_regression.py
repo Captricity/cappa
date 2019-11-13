@@ -1,7 +1,7 @@
-from __future__ import absolute_import
+
 
 import os
-from cStringIO import StringIO
+from io import StringIO
 
 from fabric.api import task, put, run, cd
 

@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from fabric.api import task, sudo, run
 from .base import VagrantTestCase

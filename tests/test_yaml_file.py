@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from .base import VagrantTestCase
 from tests.dependencies import PYTHON_DEPENDENCIES, VIRTUALENV_DEPENDENCIES

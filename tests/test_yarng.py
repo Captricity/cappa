@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from .test_yarn import setup_yarn
 from .base import VagrantTestCase

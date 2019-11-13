@@ -1,7 +1,7 @@
 import unittest
 import vagrant
 import subprocess
-from cStringIO import StringIO
+from io import StringIO
 from fabric.api import env, execute, task, sudo, put, run, cd
 
 
@@ -95,8 +95,8 @@ class VagrantTestCase(unittest.TestCase):
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
-        print stdout
-        print stderr
+        print(stdout)
+        print(stderr)
         if p.returncode:
             raise Exception(stdout)
 
