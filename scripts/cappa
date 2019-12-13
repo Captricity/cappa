@@ -47,7 +47,7 @@ def install(requirements,
 
     if only:
         only = only.split(',')
-        ignore = filter(lambda manager: manager not in only, ALL_MANAGERS)
+        ignore = list(filter(lambda manager: manager not in only, ALL_MANAGERS))
     else:
         ignore = ignore.split(',')
 
