@@ -25,7 +25,7 @@ class Yarn(CapPA):
         range_connector_lt = "<"
         connector = '@'
         manager = self.find_executable()
-        args = [manager, 'add']
+        args = [manager, 'add', '-f']
         for package, version in six.iteritems(packages):
             if version is None:
                 args.append(package)
