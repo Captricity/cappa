@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+0.19
+---
+
+- replace platform library with distro to support python 3.8
+
 0.18
 ---
 
