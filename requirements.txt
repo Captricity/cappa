@@ -1,5 +1,5 @@
 click
-cytoolz>=0.8.0,<=0.10.0
+cytoolz>=0.8.0,<=0.11.0
 distro
 six
 PyYAML
