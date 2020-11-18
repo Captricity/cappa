@@ -1,6 +1,6 @@
-import platform
+import distro
 
 
-IS_MAC = 'Darwin' in platform.platform(terse=1)
-IS_UBUNTU = platform.dist()[0] == 'Ubuntu' or platform.dist()[0] == 'debian'
+IS_MAC = distro.id() == 'darwin'
+IS_UBUNTU = distro.id() == 'ubuntu' or distro.id() == 'debian'
 ALL_MANAGERS = ('npm', 'npmg', 'yarn', 'yarng', 'bower', 'tsd', 'pip', 'pip3', 'pip_pypy', 'sys', 'Captricity')
