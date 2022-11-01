@@ -2,8 +2,9 @@ import unittest
 import vagrant
 import subprocess
 from io import StringIO
-
+import os
 from fabric.api import env, execute, task, sudo, put, run, cd
+from subprocess import call
 
 
 @task
@@ -21,9 +22,9 @@ def install_requirements_without_virtualenv(requirements_json):
 
     @task
     def requirements_json_install():
-        with cd('/home/vagrant'):
-            put(StringIO(requirements_json), '/home/vagrant/requirements.json')
-            run('cappa install --no-venv -r /home/vagrant/requirements.json')
+        os.chdir('/home/cappa/test')
+        put({StringIO(requirements_json)}, '/home/cappa/test/requirements.json')
+        call('cappa install --no-venv -r /home/cappa/test/requirements.json', shell=True) 
 
     return requirements_json_install
 
