@@ -63,7 +63,8 @@ class VagrantTestCase(unittest.TestCase):
         pass
 
     def tearDown(self):
-        self.vagrant.destroy()
+        #self.vagrant.destroy()
+        pass
 
     def _setup_vagrant(self):
         """Ensure a vagrant machine exists."""
@@ -105,7 +106,7 @@ class VagrantTestCase(unittest.TestCase):
 
     def run_fabric_task(self, fabric_task):
         """Execute a fabric task against the provisioned vagrant box."""
-        env.hosts = [self.vagrant.user_hostname_port()]
-        env.key_filename = self.vagrant.keyfile()
-        env.disable_known_hosts
+        # env.hosts = [self.vagrant.user_hostname_port()]
+        # env.key_filename = self.vagrant.keyfile()
+        # env.disable_known_hosts
         execute(fabric_task)
