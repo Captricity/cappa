@@ -58,8 +58,9 @@ class VagrantTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        self._setup_vagrant()
-        self._setup_cappa()
+        #self._setup_vagrant()
+        #self._setup_cappa()
+        pass
 
     def tearDown(self):
         self.vagrant.destroy()
