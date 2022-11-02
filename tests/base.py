@@ -22,6 +22,7 @@ def install_requirements_without_virtualenv(requirements_json):
 
     @task
     def requirements_json_install():
+        os.mkdir('/home/cappa/test')
         os.chdir('/home/cappa/test')
         put({StringIO(requirements_json)}, '/home/cappa/test/requirements.json')
         call('cappa install --no-venv -r /home/cappa/test/requirements.json', shell=True) 
