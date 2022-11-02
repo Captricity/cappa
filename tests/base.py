@@ -108,4 +108,5 @@ class VagrantTestCase(unittest.TestCase):
         # env.hosts = [self.vagrant.user_hostname_port()]
         # env.key_filename = self.vagrant.keyfile()
         # env.disable_known_hosts
-        execute(fabric_task)
+        # execute(fabric_task)
+        pass
