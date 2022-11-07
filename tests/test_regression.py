@@ -28,7 +28,7 @@ class RegressionTestCases(VagrantTestCase):
 
         @task
         def install_requirements_json_captricity():
-            with cd('/home/'):
+            with cd('/home/vagrant'):
                 put(StringIO(requirements_json), '/home/vagrant/requirements.json')
                 run('echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /home/vagrant/.ssh/config')
                 with settings(forward_agent=True):
