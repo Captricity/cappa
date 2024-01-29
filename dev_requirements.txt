@@ -2,4 +2,4 @@
 -rrequirements.txt
 ipython
 ipdb
-bumpversion
+bump-my-version
